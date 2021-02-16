@@ -4,11 +4,7 @@ import java.util.List;
 
 public interface DepartmentDAO {
 
-	/**
-	 * Get all departments from the datastore.
-	 * 
-	 * @return all departments as Department objects in a List
-	 */
+	
 	public List<Department> getAllDepartments();
 
 	/**
