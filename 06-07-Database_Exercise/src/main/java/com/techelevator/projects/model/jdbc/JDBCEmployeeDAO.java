@@ -82,6 +82,7 @@ public class JDBCEmployeeDAO implements EmployeeDAO {
 		}
 		return employeesByIdOnProjects;
 	}
+	
 	@Override
 	public void changeEmployeeDepartment(Long employeeId, Long departmentId) {
 		String sql = "UPDATE employee SET department_id = ?\n" + 
@@ -102,14 +103,12 @@ public class JDBCEmployeeDAO implements EmployeeDAO {
 	private Employee mapRowToEmployee(SqlRowSet rows) {
 		Employee employee = new Employee();
 		
-		// String gender = employee.setGender("gender");
-		
 		employee.setId(rows.getLong("employee_id"));
 		employee.setFirstName(rows.getString("first_name") );
 		employee.setLastName(rows.getString("last_name"));
-	//	employee.setBirthDay(rows.getDate("birthDay"));
-	//	employee.setGender(rows.getGender("gender"));
-	//	employee.setHireDate(rows.getDate("hire_date"));
+		employee.setBirthDay(rows.getDate("birthDay").toLocalDate());
+		employee.setGender(rows.getString("gender").charAt(0));
+		employee.setHireDate(rows.getDate("hire_date").toLocalDate());
 		
 		return employee;
 	}

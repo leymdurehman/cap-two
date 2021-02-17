@@ -53,9 +53,13 @@ public class JDBCDepartmentDAO implements DepartmentDAO {
 
 	@Override
 	public void saveDepartment(Department updatedDepartment) {
-		String sqlUpdate = "UPDATE department SET department_id = ?, name = ? WHERE department_id = ?";
-		SqlRowSet result = jdbcTemplate.queryForRowSet(sqlUpdate, updatedDepartment.getId(),updatedDepartment.getName(), updatedDepartment.getId());
-		
+		String sql = "INSERT INTO department (department_id, name) VALUES (DEFAULT, ?) RETURNING department_id";
+		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, updatedDepartment.getName());
+		if (rows.next()) {
+			
+			updatedDepartment.setId(rows.getLong("department_id"));
+			
+		}
 	}
 
 	
@@ -75,17 +79,16 @@ public class JDBCDepartmentDAO implements DepartmentDAO {
 	public Department getDepartmentById(Long id) {
 		
 		
-		String sqlSearchId = "SELECT department_id, name FROM department WHERE department_id = ?";
-		SqlRowSet result = jdbcTemplate.queryForRowSet(sqlSearchId, id);
-		
-		mapRowToDepartment(result);
+		String sql = "SELECT department_id, name FROM department " + "WHERE department_id = ?";
+		SqlRowSet result = jdbcTemplate.queryForRowSet(sql, id);
+	
 		
 		if (result.next()) {
-				mapRowToDepartment(result);
+			return	mapRowToDepartment(result);
 		
 		}
 		
-		return mapRowToDepartment(result);
+		return null;
 	}
 
 	private Department mapRowToDepartment(SqlRowSet row) {

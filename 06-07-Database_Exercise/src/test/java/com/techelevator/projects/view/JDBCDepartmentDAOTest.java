@@ -74,11 +74,16 @@ public class JDBCDepartmentDAOTest {
 	@Test
 	public void save_department_test() {
 		Department savedDepartment = getTestDepartment();
-		Department departmentFromDatabase = departmentDao.getDepartmentById(savedDepartment.getId());
+
 		
 		departmentDao.saveDepartment(savedDepartment);
 		
 		Assert.assertTrue(savedDepartment.getId() > 0);
+		
+		// the syntax was right - move the statement below to run AFTER the first Assert 
+		//	otherwise the test viewed department from Database as null 
+		Department departmentFromDatabase = departmentDao.getDepartmentById(savedDepartment.getId());
+		
 		Assert.assertEquals(departmentFromDatabase, savedDepartment);
 	}
 
@@ -103,7 +108,9 @@ public class JDBCDepartmentDAOTest {
 	
 	private Department getTestDepartment() {
 		Department createdTestDepartment = new Department();
-		createdTestDepartment.setId((long)100000);
+		
+		// dont need department_id here because our methods as we call them are generating the ID or we are putting "Default"
+		
 		createdTestDepartment.setName("TestName");
 		return createdTestDepartment;
 	}
