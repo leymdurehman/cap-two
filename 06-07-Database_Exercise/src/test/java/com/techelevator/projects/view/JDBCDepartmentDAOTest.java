@@ -9,8 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
-import com.techelevator.addressbook.Contact;
-import com.techelevator.city.City;
+
 import com.techelevator.projects.model.Department;
 import com.techelevator.projects.model.DepartmentDAO;
 import com.techelevator.projects.model.jdbc.JDBCDepartmentDAO;
@@ -26,7 +25,7 @@ public class JDBCDepartmentDAOTest {
 	@BeforeClass
 	public static void createDataSource() {
 		dataSource = new SingleConnectionDataSource();
-		dataSource.setUrl("jdbc:postgresql://localhost:5432/Projects");
+		dataSource.setUrl("jdbc:postgresql://localhost:5432/projects");
 		dataSource.setUsername("postgres");
 		dataSource.setPassword("postgres1");
 		dataSource.setAutoCommit(false);	
@@ -52,14 +51,6 @@ public class JDBCDepartmentDAOTest {
 
 
 
-//	@Test
-//	private List<Department> get_all_departments_test() {
-//		
-//		Department newDepartment = new Department();
-//		String sql = ""
-//	
-//	
-//	}
 	
 	@Test
 	public void testing_select_with_single_result() {
@@ -67,23 +58,28 @@ public class JDBCDepartmentDAOTest {
 		 * ARRANGE
 		 */
 		// Create the Dummy data and store it
-		Department createdTestDepartment = new Department();
+		Department createdTestDepartment = getTestDepartment();
 		// Insert it into the table and get the id
 		String sql = "INSERT INTO department (department_id, name) VALUES (DEFAULT, ?) RETURNING department_id";
 		SqlRowSet result = jdbcTemplate.queryForRowSet(sql, createdTestDepartment.getName());
 		result.next();
 		createdTestDepartment.setId(result.getLong("department_id"));
 		
-		/*
-		 * ACT
-		 */
 		Department departmentFromDatabase = departmentDao.getDepartmentById(createdTestDepartment.getId());
 		
-		/*
-		 * ASSERT
-		 */
 		Assert.assertNotNull( departmentFromDatabase );
 		Assert.assertEquals(createdTestDepartment, departmentFromDatabase);
+	}
+	
+	@Test
+	public void save_department_test() {
+		Department savedDepartment = getTestDepartment();
+		Department departmentFromDatabase = departmentDao.getDepartmentById(savedDepartment.getId());
+		
+		departmentDao.saveDepartment(savedDepartment);
+		
+		Assert.assertTrue(savedDepartment.getId() > 0);
+		Assert.assertEquals(departmentFromDatabase, savedDepartment);
 	}
 
 	
@@ -102,11 +98,15 @@ public class JDBCDepartmentDAOTest {
 //		return departments;	//RETURNING ALL DEPARTMENTS
 //	}
 
-	
 
 	
 	
-	
+	private Department getTestDepartment() {
+		Department createdTestDepartment = new Department();
+		createdTestDepartment.setId((long)100000);
+		createdTestDepartment.setName("TestName");
+		return createdTestDepartment;
+	}
 	
 
 }

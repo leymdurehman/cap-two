@@ -24,7 +24,7 @@ public class JDBCDepartmentDAO implements DepartmentDAO {
 	public List<Department> getAllDepartments() {
 		
 	
-		String sql = "SELECT name FROM department";
+		String sql = "SELECT department_id, name FROM department";
 		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql);
 		
 		List<Department> departments = new ArrayList<Department>();
@@ -74,7 +74,6 @@ public class JDBCDepartmentDAO implements DepartmentDAO {
 	@Override
 	public Department getDepartmentById(Long id) {
 		
-		Department department = null;
 		
 		String sqlSearchId = "SELECT department_id, name FROM department WHERE department_id = ?";
 		SqlRowSet result = jdbcTemplate.queryForRowSet(sqlSearchId, id);
@@ -82,12 +81,11 @@ public class JDBCDepartmentDAO implements DepartmentDAO {
 		mapRowToDepartment(result);
 		
 		if (result.next()) {
-		department = mapRowToDepartment(result);
+				mapRowToDepartment(result);
+		
 		}
 		
-		
-		
-		return department;
+		return mapRowToDepartment(result);
 	}
 
 	private Department mapRowToDepartment(SqlRowSet row) {
