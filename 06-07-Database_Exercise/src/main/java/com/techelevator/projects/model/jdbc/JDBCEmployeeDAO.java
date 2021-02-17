@@ -60,24 +60,56 @@ public class JDBCEmployeeDAO implements EmployeeDAO {
 		List<Employee> EmployeeByDepartment = new ArrayList<Employee>();
 		
 		while(rows.next()) {
-			EmployeeByDepartment.add(rows)
+			EmployeeByDepartment.add(mapRowToEmployee(rows));
 		}
 		
-		return new ArrayList<>();
+		return EmployeeByDepartment;
 	}
 
 	@Override
 	public List<Employee> getEmployeesWithoutProjects() {
-		return new ArrayList<>();
+		
+		List<Employee> EmployeesWithoutProjects = new ArrayList<Employee>();
+		String sql = "SELECT first_name, last_name FROM employee\n" + 
+				"WHERE NOT EXISTS (SELECT employee_id FROM project_employee WHERE project_employee.employee_id = employee.employee_id)";
+		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql);
+		
+		List<Employee> employeesWithProjects = new ArrayList<>();
+		List<Employee> missingEmployee = new ArrayList<Employee>();
+
+		while(rows.next()) {
+			EmployeesWithoutProjects.add(mapRowToEmployee(rows));
+		}
+		
+		return EmployeesWithoutProjects;
 	}
 
 	@Override
 	public List<Employee> getEmployeesByProjectId(Long projectId) {
-		return new ArrayList<>();
+		
+		String sql = "SELECT first_name, last_name FROM employee JOIN project_employee ON employee.employee_id = project_employee.employee_id WHERE project_employee.project_id = ?";
+		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, projectId);
+	
+		List <Employee>employeesByIdOnProjects = new ArrayList<Employee>();
+		while (rows.next()) {
+			employeesByIdOnProjects.add(mapRowToEmployee(rows));
+		}
+		return employeesByIdOnProjects;
 	}
 
 	@Override
 	public void changeEmployeeDepartment(Long employeeId, Long departmentId) {
+		
+		String sql = "UPDATE employee SET department_id = ?\n" + 
+				"WHERE employee_id = ?";
+		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, departmentId, employeeId);
+		
+		List <Employee>changedDepartments = new ArrayList<Employee>();
+		
+		while (rows.next()) {
+			changedDepartments.add(mapRowToEmployee(rows));
+		}
+	
 		
 	}
 	
