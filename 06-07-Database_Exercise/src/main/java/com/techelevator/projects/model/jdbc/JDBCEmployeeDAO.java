@@ -57,21 +57,13 @@ public class JDBCEmployeeDAO implements EmployeeDAO {
 	public List<Employee> getEmployeesWithoutProjects() {
 		
 		List<Employee> EmployeesWithoutProjects = new ArrayList<Employee>();
-<<<<<<< HEAD
 		String sql = "SELECT first_name, last_name FROM employee\n" + 
-=======
-		String sql = "SELECT first_name, last_name FROM employee\n" +
->>>>>>> 0daf2be74d75e421c83253c5531d4f68ce7ac9f2
 				"WHERE NOT EXISTS (SELECT employee_id FROM project_employee WHERE project_employee.employee_id = employee.employee_id)";
 		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql);
 		
 		List<Employee> employeesWithProjects = new ArrayList<>();
-<<<<<<< HEAD
 		List<Employee> missingEmployee = new ArrayList<Employee>();
 
-=======
-		
->>>>>>> 0daf2be74d75e421c83253c5531d4f68ce7ac9f2
 		while(rows.next()) {
 			EmployeesWithoutProjects.add(mapRowToEmployee(rows));
 		}
@@ -92,12 +84,7 @@ public class JDBCEmployeeDAO implements EmployeeDAO {
 	}
 	@Override
 	public void changeEmployeeDepartment(Long employeeId, Long departmentId) {
-		
-<<<<<<< HEAD
 		String sql = "UPDATE employee SET department_id = ?\n" + 
-=======
-		String sql = "UPDATE employee SET department_id = ?\n" +
->>>>>>> 0daf2be74d75e421c83253c5531d4f68ce7ac9f2
 				"WHERE employee_id = ?";
 		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, departmentId, employeeId);
 		
