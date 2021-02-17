@@ -1,26 +1,16 @@
 package com.techelevator.projects.model.jdbc;
-
 import java.time.LocalDate;
-
-import java.util.Date
-import java.sql.Date
-
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.sql.DataSource;
-
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-
 import com.techelevator.projects.model.Employee;
 import com.techelevator.projects.model.EmployeeDAO;
-
 public class JDBCEmployeeDAO implements EmployeeDAO {
-
 	private JdbcTemplate jdbcTemplate;
 	
-
 	public JDBCEmployeeDAO(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
@@ -37,10 +27,9 @@ public class JDBCEmployeeDAO implements EmployeeDAO {
 		
 		return EmployeeList;
 	}
-
 	@Override
 	public List<Employee> searchEmployeesByName(String firstNameSearch, String lastNameSearch) {
-		String sql = "SELECT first_name, last_name FROM employee WHERE first_name like %" + "?" + 
+		String sql = "SELECT first_name, last_name FROM employee WHERE first_name like %" + "?" +
 				"% AND last_name like %" + "?" + "%";
 		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql);
 		List<Employee> EmployeeList = new ArrayList<Employee>();
@@ -51,7 +40,6 @@ public class JDBCEmployeeDAO implements EmployeeDAO {
 		
 		return EmployeeList;
 	}
-
 	@Override
 	public List<Employee> getEmployeesByDepartmentId(long id) {
 		String sql = "SELECT first_name, last_name FROM employee WHERE department_id = ?";
@@ -60,24 +48,52 @@ public class JDBCEmployeeDAO implements EmployeeDAO {
 		List<Employee> EmployeeByDepartment = new ArrayList<Employee>();
 		
 		while(rows.next()) {
-			EmployeeByDepartment.add(rows)
+			EmployeeByDepartment.add(mapRowToEmployee(rows));
 		}
 		
-		return new ArrayList<>();
+		return EmployeeByDepartment;
 	}
-
 	@Override
 	public List<Employee> getEmployeesWithoutProjects() {
-		return new ArrayList<>();
+		
+		List<Employee> EmployeesWithoutProjects = new ArrayList<Employee>();
+		String sql = "SELECT first_name, last_name FROM employee\n" +
+				"WHERE NOT EXISTS (SELECT employee_id FROM project_employee WHERE project_employee.employee_id = employee.employee_id)";
+		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql);
+		
+		List<Employee> employeesWithProjects = new ArrayList<>();
+		
+		while(rows.next()) {
+			EmployeesWithoutProjects.add(mapRowToEmployee(rows));
+		}
+		
+		return EmployeesWithoutProjects;
 	}
-
 	@Override
 	public List<Employee> getEmployeesByProjectId(Long projectId) {
-		return new ArrayList<>();
+		
+		String sql = "SELECT first_name, last_name FROM employee JOIN project_employee ON employee.employee_id = project_employee.employee_id WHERE project_employee.project_id = ?";
+		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, projectId);
+	
+		List <Employee>employeesByIdOnProjects = new ArrayList<Employee>();
+		while (rows.next()) {
+			employeesByIdOnProjects.add(mapRowToEmployee(rows));
+		}
+		return employeesByIdOnProjects;
 	}
-
 	@Override
 	public void changeEmployeeDepartment(Long employeeId, Long departmentId) {
+		
+		String sql = "UPDATE employee SET department_id = ?\n" +
+				"WHERE employee_id = ?";
+		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, departmentId, employeeId);
+		
+		List <Employee>changedDepartments = new ArrayList<Employee>();
+		
+		while (rows.next()) {
+			changedDepartments.add(mapRowToEmployee(rows));
+		}
+	
 		
 	}
 	
@@ -91,11 +107,12 @@ public class JDBCEmployeeDAO implements EmployeeDAO {
 		employee.setId(rows.getLong("employee_id"));
 		employee.setFirstName(rows.getString("first_name") );
 		employee.setLastName(rows.getString("last_name"));
-		employee.setBirthDay(rows.getDate("birthDay"));
-		employee.setGender(rows.getGender("gender"));
-		employee.setHireDate(rows.getDate("hire_date"));
+	//	employee.setBirthDay(rows.getDate("birthDay"));
+	//	employee.setGender(rows.getGender("gender"));
+	//	employee.setHireDate(rows.getDate("hire_date"));
 		
 		return employee;
 	}
-
 }
+
+

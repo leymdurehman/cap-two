@@ -9,8 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
-import com.techelevator.addressbook.Contact;
-import com.techelevator.city.City;
+
 import com.techelevator.projects.model.Department;
 import com.techelevator.projects.model.DepartmentDAO;
 import com.techelevator.projects.model.jdbc.JDBCDepartmentDAO;
