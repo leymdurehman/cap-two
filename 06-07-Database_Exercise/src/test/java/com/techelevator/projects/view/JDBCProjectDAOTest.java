@@ -126,17 +126,18 @@ public class JDBCProjectDAOTest {
 		//getTestEmployeeByProject(); //instantiates employeeAddedToProject list
 		//same as below, couldn't call it without an error
 		
-		//getTestEmployeeByProject()
+//		//getTestEmployeeByProject()
 		String sql = "SELECT employee_id FROM project_employee WHERE project_id = 7";
 		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql);
 		//SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, id);
 		
-		List<Employee> employeeAddedToProject = new ArrayList<Employee>();
+		
 		
 		while(rows.next()) {
 			employeeAddedToProject.add(mapRowToEmployee(rows));
 		}
 		
+		//List<Employee> employeeAddedToProject = getTestEmployeeByProject();
 		
 		
 		//List<Project> results = dao.getAllActiveProjects();
@@ -151,18 +152,18 @@ public class JDBCProjectDAOTest {
 	
 	
 	
-	@Test
-	public void test_remove_employee_from_project() {
-		//test project: createdTestProject
-		testerEmployee();
-		createTestProject();
-		
-		
-		List<Project> results = dao.getAllActiveProjects();
-		
-		assertEquals(2, results.size());
-		
-	}
+//	@Test
+//	public void test_remove_employee_from_project() {
+//		//test project: createdTestProject
+//		testerEmployee();
+//		createTestProject();
+//		
+//		
+//		List<Project> results = dao.getAllActiveProjects();
+//		
+//		assertEquals(2, results.size());
+//		
+//	}
 	
 	
 	
@@ -203,7 +204,7 @@ public class JDBCProjectDAOTest {
 	
 	
 	//method to be able to able to call during test. to select test employee from test project
-	private void getTestEmployeeByProject() {
+	private List<Employee> getTestEmployeeByProject() {
 		String sql = "SELECT employee_id FROM project_employee WHERE project_id = 7";
 		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql);
 		//SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, id);
@@ -213,6 +214,7 @@ public class JDBCProjectDAOTest {
 		while(rows.next()) {
 			employeeAddedToProject.add(mapRowToEmployee(rows));
 		}
+		return employeeAddedToProject;
 	}
 	
 	private Employee mapRowToEmployee(SqlRowSet rows) {
