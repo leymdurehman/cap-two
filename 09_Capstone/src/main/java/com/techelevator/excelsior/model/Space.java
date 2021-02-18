@@ -69,7 +69,7 @@ public void setMaxOccupancy(int maxOccupancy) {
 }
 	
 	
-	
+
 	
 	
 }
