@@ -23,7 +23,6 @@ public class JDBCProjectDAO implements ProjectDAO {
 	@Override
 	public List<Project> getAllActiveProjects() {
 
-		 
 		String sql = "SELECT * FROM project\n" + 
 				"WHERE to_date IS NOT NULL AND from_date IS NOT NULL AND to_date - current_date >= 0";
 		
@@ -44,7 +43,7 @@ public class JDBCProjectDAO implements ProjectDAO {
 		
 		
 		String sql = "DELETE FROM project_employee WHERE employee_id = ? AND project_id = ?";
-		SqlRowSet result = jdbcTemplate.queryForRowSet(sql, employeeId, projectId);
+		jdbcTemplate.update(sql, employeeId, projectId);
 		
 	}
 
@@ -54,7 +53,7 @@ public class JDBCProjectDAO implements ProjectDAO {
 		
 		String sql = "INSERT INTO project_employee(project_id, employee_id) VALUES (?,?)";
 		
-		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, projectId, employeeId);
+		jdbcTemplate.update(sql, projectId, employeeId);
 		
 	}
 
