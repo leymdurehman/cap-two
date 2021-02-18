@@ -15,6 +15,8 @@ public class JDBCEmployeeDAO implements EmployeeDAO {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 	
+	
+	
 	@Override
 	public List<Employee> getAllEmployees() {
 		String sql = "SELECT first_name, last_name FROM employee WHERE first_name NOT NULL OR last_name NOT NULL";
@@ -104,11 +106,13 @@ public class JDBCEmployeeDAO implements EmployeeDAO {
 		Employee employee = new Employee();
 		
 		employee.setId(rows.getLong("employee_id"));
+		employee.setDepartmentId(rows.getLong("department_id"));
 		employee.setFirstName(rows.getString("first_name") );
 		employee.setLastName(rows.getString("last_name"));
 		employee.setBirthDay(rows.getDate("birthDay").toLocalDate());
 		employee.setGender(rows.getString("gender").charAt(0));
 		employee.setHireDate(rows.getDate("hire_date").toLocalDate());
+		
 		
 		return employee;
 	}
