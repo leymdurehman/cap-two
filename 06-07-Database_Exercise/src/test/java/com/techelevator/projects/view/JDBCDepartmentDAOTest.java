@@ -78,32 +78,39 @@ public class JDBCDepartmentDAOTest {
 		
 		departmentDao.saveDepartment(savedDepartment);
 		
+		Department departmentFromDatabase = departmentDao.getDepartmentById(savedDepartment.getId());
+		
 		Assert.assertTrue(savedDepartment.getId() > 0);
 		
-		// the syntax was right - move the statement below to run AFTER the first Assert 
-		//	otherwise the test viewed department from Database as null 
-		Department departmentFromDatabase = departmentDao.getDepartmentById(savedDepartment.getId());
 		
 		Assert.assertEquals(departmentFromDatabase, savedDepartment);
 	}
 
+
+	@Test
+	public void create_department_test() {
+		
+		
+		Department newDepartment = getTestDepartment();
+		
+		departmentDao.createDepartment(newDepartment);
+		
+		Department createdDepartmentFromDatabase = 	departmentDao.getDepartmentById(newDepartment.getId());
+		
+		Assert.assertNotNull(createdDepartmentFromDatabase);
+		
+		Assert.assertEquals(createdDepartmentFromDatabase, newDepartment);
+		
+		
+		
+	}
 	
 	
-//	public List<Department> getAllDepartments() {
-//		
-//		
-//		String sql = "SELECT name FROM department";
-//		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql);
-//		
-//		List<Department> departments = new ArrayList<Department>();
-//		while (rows.next()) {
-//			departments.add( mapRowToDepartment(rows) );
-//		}
-//
-//		return departments;	//RETURNING ALL DEPARTMENTS
-//	}
-
-
+	
+	
+	
+	
+	
 	
 	
 	private Department getTestDepartment() {
