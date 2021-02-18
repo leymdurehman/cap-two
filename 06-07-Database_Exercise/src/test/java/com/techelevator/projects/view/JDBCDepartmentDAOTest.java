@@ -106,7 +106,20 @@ public class JDBCDepartmentDAOTest {
 	}
 	
 	
-	
+	@Test
+	public void get_department_by_id() {
+		
+		Department newDepartment = getTestDepartment();
+		
+		departmentDao.getDepartmentById(newDepartment.getId());
+		
+		
+		
+		
+		
+		
+		
+	}
 	
 	
 	

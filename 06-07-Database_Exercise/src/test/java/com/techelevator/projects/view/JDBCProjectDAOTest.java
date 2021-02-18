@@ -42,7 +42,7 @@ public class JDBCProjectDAOTest {
 	@BeforeClass
 	public static void setupDataSource() {
 		dataSource = new SingleConnectionDataSource();
-		dataSource.setUrl("jdbc:postgresql://localhost:5432/Projects");
+		dataSource.setUrl("jdbc:postgresql://localhost:5432/projects");
 		dataSource.setUsername("postgres");
 		dataSource.setPassword("postgres1");
 		/* The following line disables autocommit for connections
