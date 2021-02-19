@@ -8,8 +8,8 @@ private long reservationID;
 private long spaceID;
 private int numberOfattendees;
 private Date startDate;
-
-
+private Date endDate;
+private String reservedFor;
 
 public long getReservationID() {
 	return reservationID;
@@ -34,6 +34,18 @@ public Date getStartDate() {
 }
 public void setStartDate(Date startDate) {
 	this.startDate = startDate;
+}
+public Date getEndDate() {
+	return endDate;
+}
+public void setEndDate(Date endDate) {
+	this.endDate = endDate;
+}
+public String getReservedFor() {
+	return reservedFor;
+}
+public void setReservedFor(String reservedFor) {
+	this.reservedFor = reservedFor;
 }
 	
 	
