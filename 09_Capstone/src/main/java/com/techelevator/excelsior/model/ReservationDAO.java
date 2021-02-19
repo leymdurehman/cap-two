@@ -10,7 +10,7 @@ public interface ReservationDAO {
 	public List <Reservation> getAllReservations();
 	
 	
-	public Reservation getReservationById(long resID);
+	public Reservation getReservationBy(long resID);
 	
 	
 	public Space getReservationBySpaceID (long spaceID);
@@ -26,6 +26,12 @@ public interface ReservationDAO {
 	
 	
 	public void deleteReservation(Reservation reservation);
+
+
+	Reservation getReservationById(long resID);
+
+
+	public Reservation createReservation(int spaceID, int maxOccupancy, String startDate, String EndDate, String reservedFor);
 	
 	
 	
