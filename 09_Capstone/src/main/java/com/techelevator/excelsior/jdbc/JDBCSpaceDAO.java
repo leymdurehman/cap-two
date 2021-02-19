@@ -2,6 +2,8 @@ package com.techelevator.excelsior.jdbc;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -45,10 +47,16 @@ public class JDBCSpaceDAO implements SpaceDAO{
 
 	
 	@Override
-	public List<Space> getSpacesByClient(Date startDate, Date endDate) {
-		// TODO Auto-generated method stub
+	public List<Space> getSpacesByClient(LocalDate startDate, LocalDate endDate) {
+		// check availability of a space by date
 		
-		// check availabilites of a space by date
+		String sql = "SELECT * FROM reservation WHERE NOT (start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?)";
+		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, startDate, endDate, startDate, endDate);
+		
+		while(rows.next()) {
+		// This needs to return available spaces.
+		}
+		
 		return null;
 	}
 
@@ -59,7 +67,7 @@ public class JDBCSpaceDAO implements SpaceDAO{
 		String[] dateParts = {""};
 		String month = dateParts[0];
 		
-		// TEST: Does this account for zeros?
+		// TEST: Does this account for zeros at start of month?
 		if (customerDate.contains("-")) {
 			dateParts = customerDate.split("-");
 		}
@@ -72,23 +80,11 @@ public class JDBCSpaceDAO implements SpaceDAO{
 
 	
 	@Override
-	public Date getEndDate(Date startDate, int numberNumberOfDays) {
-		// TODO Auto-generated method stub
-		SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+	public LocalDate getEndDate(LocalDate startDate, int numberNumberOfDays) {
 		
-		
-		//https://attacomsian.com/blog/java-add-days-to-date
-		Calendar c = Calendar.getInstance();
-		c.setTime(startDate);
-		c.add(Calendar.DATE, numberNumberOfDays);
-		
-		
-		// Below code is a String
-		return formatter.format(c.getTime());
-	}
-
+		LocalDate endDate = startDate.plusDays(numberNumberOfDays);
 	
-
-
-
+		return endDate;
+		
+	}
 }
