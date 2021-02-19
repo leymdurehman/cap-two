@@ -1,5 +1,7 @@
 package com.techelevator.excelsior.model;
 
+import java.math.BigDecimal;
+
 public class Space {
 
 private long id;
@@ -8,7 +10,7 @@ private String name;
 private boolean isAccessible;
 private int openFrom;
 private int openTo;
-private String dailyRate;
+private BigDecimal dailyRate = BigDecimal.ZERO;
 private int maxOccupancy;
 public long getId() {
 	return id;
@@ -48,17 +50,19 @@ public void setOpenTo(int openTo) {
 }
 public double getDailyRate() {
 	
-	String amount = dailyRate;
-    amount = amount.replace("$", "");
-    amount = amount.replace(",", "");
-    double intAmount= (int)Double.parseDouble(amount);
+//	  BigDecimal amount = dailyRate;
+//    amount = amount.replace("$", "");
+//    amount = amount.replace(",", "");
+//    double intAmount= (int)Double.parseDouble(amount);
     
-	return intAmount;
+    long longAmount = dailyRate.longValue();
+    
+	return longAmount;
 }
 
 
 
-public void setDailyRate(String dailyRate) {
+public void setDailyRate(BigDecimal dailyRate) {
 	this.dailyRate = dailyRate;
 }
 public int getMaxOccupancy() {
