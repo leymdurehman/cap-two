@@ -3,6 +3,7 @@ package com.techelevator;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
-import com.techelevator.city.JDBCCityDAO;
+
 import com.techelevator.excelsior.jdbc.JDBCSpaceDAO;
 import com.techelevator.excelsior.model.Space;
 import com.techelevator.excelsior.model.SpaceDAO;
@@ -78,10 +79,11 @@ public class DAOSpaceIntegrationTest extends DAOIntegrationTest {
 		// set dummy for a venue 
 		
 		String result = "INSERT INTO venue (id, name, city_id, description) VALUES (?, 'JWs Oasis', 1, 'Yo this capstone is lit.')";
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		jdbcTemplate.update(result, FAKE_VENUE_ID);
 		
-		
+//		String reservationInput = "INSERT INTO reservation (reservation_id, space_id, number_of_attendees, start_date, end_date, reserved_for) VALUES (111111, 999999, 10, '2020-01-01', '2020-01-15', 'Kriewall Family')";
+//		jdbcTemplate.update(reservationInput);
+//		
 	}
 	
 
@@ -119,8 +121,28 @@ public class DAOSpaceIntegrationTest extends DAOIntegrationTest {
 	}
 
 	
+	@Test 
+	public void get_end_date_test(){
+		int numberNumberOfDays = 10;
+		
+		LocalDate startDate = LocalDate.of(2010, 01, 28);
+		LocalDate expectedDate = LocalDate.of(2010, 02, 07);
+		
+		LocalDate actualDate = jdbcSpaceDao.getEndDate(startDate, numberNumberOfDays);
+		Assert.assertEquals(expectedDate, actualDate);
+		
+		// move to JUnit testing?
+	}
 	
-	
+	@Test
+	public void get_available_spaces_test() {
+		LocalDate desiredCheckInDate = LocalDate.of(2022, 8, 8);
+		LocalDate checkOutDate = LocalDate.of(2022, 8, 12);
+		
+		List<Space> availableRooms = jdbcSpaceDao.getSpacesByClient(desiredCheckInDate, checkOutDate);
+		
+		Assert.assertNotNull(availableRooms);
+	}
 	
 	
 	
