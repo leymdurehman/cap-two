@@ -15,8 +15,16 @@ public interface VenueDAO {
 	public String getCityNameFromCityID(long cityID);
 	//join venue on city table city_id
 	
-	public String getCategoryFromVenueID(long VenueID);
+	public List<String> getCategoryFromVenueID(long VenueID);
 	// join venue on category_venue with venue id then get categoryName
+
+
+
+	public List<Venue> returnVenueInfo();
+
+
+
+	public Venue returnVenueInfoById(long venueId);
 	
 
 	// return string category name
