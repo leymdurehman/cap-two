@@ -9,7 +9,11 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
+import com.techelevator.excelsior.model.Venue;
+
 public abstract class DAOIntegrationTest {
+	
+	
 
 	/*
 	 * Using this particular implementation of DataSource so that every database
@@ -58,4 +62,16 @@ public abstract class DAOIntegrationTest {
 	protected DataSource getDataSource() {
 		return dataSource;
 	}
+	
+
+	
+	private Venue getVenue(String name, long cityId, String description, int id) {
+		Venue testVenue = new Venue();
+		testVenue.setCityID(cityId);
+		testVenue.setDescription(description);
+		testVenue.setId(id);
+		testVenue.setName(name);
+		return testVenue;
+	}
+	
 }

@@ -9,7 +9,7 @@ import java.util.List;
 public interface SpaceDAO {
 
 
-	public List<Space> getAllSpacesforVenueID(String userInputVenueId);
+	public List<Space> getAllSpacesforVenueID(int userInputVenueId);
 	// takes value that user passes in on the View Venues Menu
 	
 	public List<Space> getSpacesByClient(LocalDate startDate, LocalDate endDate);
