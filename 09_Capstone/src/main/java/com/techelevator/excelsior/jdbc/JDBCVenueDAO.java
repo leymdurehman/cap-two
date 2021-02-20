@@ -69,7 +69,7 @@ public class JDBCVenueDAO implements VenueDAO{
 	
 	//Venue info by entered id search (returns venue id, venue name, city, state)
 	@Override
-	public Venue returnVenueInfoById(long venueId) {
+	public ArrayList<Venue> returnVenueInfoById(long venueId) {
 		
 		String sqlGetVenues = "select venue.id as venue_id, venue.description, venue.name as venue_name, city.name as city, city.state_abbreviation as state" + 
 				"from venue " + 
@@ -78,14 +78,14 @@ public class JDBCVenueDAO implements VenueDAO{
 				"where venue.id = ?";
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetVenues, venueId);
 		
-		Venue theVenue = null; //= new Venue();
-		//ArrayList<Venue> venueList = new ArrayList<>();
+		//Venue theVenue = null; //= new Venue();
+		ArrayList<Venue> venueList = new ArrayList<>();
 		
 		while(results.next()) {
-			theVenue = mapRowToVenue(results);
+			venueList.add(mapJoinRowToVenue(results));
 			//venueList.add(theVenue);
 		}
-		return theVenue;
+		return venueList;
 	}
 	
 	
@@ -129,15 +129,15 @@ public class JDBCVenueDAO implements VenueDAO{
 	
 	
 	private Venue mapJoinRowToVenue(SqlRowSet results) {
-		 "select venue.id as venue_id, venue.description, venue.name as venue_name, city.name as city, city.state_abbreviation as state" + 
-					"from venue" 
+		 
 	Venue venueJoin = new Venue();
 		 
 		 venueJoin.setId(results.getLong("venue_id"));
 		 venueJoin.setName(results.getString("venue_name"));
 		 venueJoin.setCity("city");
 		 venueJoin.setDescription(results.getString("description"));
-		 venueJoin.
+		 venueJoin.setState("state");
+		return venueJoin;
 		
 	}
 	
