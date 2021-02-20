@@ -39,7 +39,7 @@ public class JDBCSpaceDAO implements SpaceDAO{
 	public List<Space> getSpacesByClient(LocalDate startDate, LocalDate endDate) {
 		// check availability of a space by date
 		
-		String sql = "SELECT space_id FROM reservation WHERE NOT (start_date BETWEEN CAST(? AS DATE) AND CAST(? AS DATE)) OR (end_date BETWEEN CAST(? AS DATE) AND CAST(? AS DATE))";
+		String sql = "SELECT * FROM reservation WHERE NOT (start_date BETWEEN ? AND ? ) OR (end_date BETWEEN ? AND ? )";
 		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, startDate, endDate, startDate, endDate);
 		
 		List<Space> availableSpaces = new ArrayList<Space>();
@@ -84,6 +84,7 @@ public class JDBCSpaceDAO implements SpaceDAO{
 		
 	}
 	
+	// mapRowToReservation???
 	public Space mapRowToSpace(SqlRowSet row) {
 		Space space = new Space();
 		space.setAccessible(row.getBoolean("is_accessible"));

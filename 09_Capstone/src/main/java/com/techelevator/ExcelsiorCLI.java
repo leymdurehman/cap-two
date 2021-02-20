@@ -46,7 +46,30 @@ public class ExcelsiorCLI {
 
 	public void run() {
 		
-		// menu class 
+		// menu . display menu
+		int input = 1;
+		while (input == 1) {
+			
+			// print all ids and names venueDAO.getAllVenues();
+			long venueID = venue.getId();
+			while( input == venueID) {
+				Venue venueForCustomer = venueDAO.returnVenueInfoById(venueID);
+				//method function
+				venueForCustomer.getName();
+				//venueForCustomer.getCity()
+				//venueForCustomer.g
+			//	println venue.
+				
+				
+			}
+		
+			
+			
+			
+			
+			
+			
+		}
 	
 		
 		
