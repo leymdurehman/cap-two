@@ -8,6 +8,10 @@ private long cityID;
 private String description;
 private String city;
 private String Category;
+private String state;
+
+
+// create a state class
 
 
 public String getCategory() {
@@ -19,6 +23,10 @@ public void setCategory(String category) {
 public String getCity() {
 	return city;
 }
+
+
+
+
 public void setCity(String city) {
 	this.city = city;
 }
@@ -47,6 +55,12 @@ return cityID;
 }
 public void setCityID(long cityID) {
 this.cityID = cityID;
+}
+public String getState() {
+	return state;
+}
+public void setState(String state) {
+	this.state = state;
 }
 	
 	
