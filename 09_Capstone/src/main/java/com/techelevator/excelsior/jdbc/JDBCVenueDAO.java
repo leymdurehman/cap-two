@@ -82,7 +82,7 @@ public class JDBCVenueDAO implements VenueDAO{
 		//ArrayList<Venue> venueList = new ArrayList<>();
 		
 		while(results.next()) {
-			theVenue = mapRowToVenue(results);
+			theVenue = mapJoinRowToVenue(results);
 			//venueList.add(theVenue);
 		}
 		return theVenue;
@@ -129,15 +129,15 @@ public class JDBCVenueDAO implements VenueDAO{
 	
 	
 	private Venue mapJoinRowToVenue(SqlRowSet results) {
-		 "select venue.id as venue_id, venue.description, venue.name as venue_name, city.name as city, city.state_abbreviation as state" + 
-					"from venue" 
+		 
 	Venue venueJoin = new Venue();
 		 
 		 venueJoin.setId(results.getLong("venue_id"));
 		 venueJoin.setName(results.getString("venue_name"));
 		 venueJoin.setCity("city");
 		 venueJoin.setDescription(results.getString("description"));
-		 venueJoin.
+		 venueJoin.setState("state");
+		return venueJoin;
 		
 	}
 	
