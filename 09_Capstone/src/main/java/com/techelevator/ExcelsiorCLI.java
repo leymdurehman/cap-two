@@ -47,37 +47,80 @@ public class ExcelsiorCLI {
 	public void run() {
 		
 		// menu . display menu
-		int input = 1;
-		while (input == 1) {
+		String input = "0";
 			
-			// print all ids and names venueDAO.getAllVenues();
-			long venueID = venue.getId();
-			while( input == venueID) {
-				Venue venueForCustomer = venueDAO.returnVenueInfoById(venueID);
-				//method function
-				venueForCustomer.getName();
-				//venueForCustomer.getCity()
-				//venueForCustomer.g
-			//	println venue.
+		if ( input != "1" || input != "Q" ) {
+			while (input == "1") {
+				
+				
+				menu.showVenueSpaces();
+				
+				
+				// print all ids and names venueDAO.getAllVenues();
+				// long venueID = venue.getId();
+				
+				while( input == "venueID") {
+					// venue ID is a scanner input variable
+					
+					
+					if (input == "1") {
+						// View Spaces
+						// List venue Spaces
+						// id, name, open / close months, daily rate, max occupancy
+						
+						if (input == "1") {
+							// Reserve a Space
+							// printLn to user - When do you need the space
+							// print ln to user how many days?
+							// println to user how many people in attendance?
+							
+							// println to user the spaces that meet criteria
+							
+							// println to user which space would you like to reserve?
+							// who is it for?
+							
+							// print out confirmation Number
+							
+							if (input == "0") {
+								break;
+							}
+							
+						if (input == "R") {
+							// break to previous screen
+							break;
+						}
+						}
+						
+					}
+					if (input == "2") {
+						// Search for reservation with user set input
+					}
+					else if (input == "R"){
+						// return to previous screen
+						break;
+					}
+					
+					
+					
+				}
+			
+				if (input == "R") {
+					//Return to previous screen
+					break;
+				}	
 				
 				
 			}
 		
-			
-			
-			
-			
-			
-			
+			if (input == "R") {
+				System.exit(1);
+			}
+		
+		
+		
 		}
-	
 		
-		
-		
-		
-		
-		
-		
+		System.exit(1);
 		
 		
 		
