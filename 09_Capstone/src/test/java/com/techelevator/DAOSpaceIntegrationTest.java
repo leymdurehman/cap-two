@@ -1,7 +1,4 @@
 package com.techelevator;
-
-
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,7 +14,6 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import com.techelevator.excelsior.jdbc.JDBCSpaceDAO;
 import com.techelevator.excelsior.model.Space;
-import com.techelevator.excelsior.model.SpaceDAO;
 
 public class DAOSpaceIntegrationTest extends DAOIntegrationTest {
 
@@ -89,16 +85,15 @@ public class DAOSpaceIntegrationTest extends DAOIntegrationTest {
 
 
 	
-//	@Test
-//	public void get_month_from_user_test() {
-//		
-//		String testDate = "01-01-1992";
-//		getMonth(testDate);
-//		// Debugger throws null after line 31. Why?
-//		
-//		Assert.assertEquals(testDate, "01");
-//	}
-	// move to junit tests
+	@Test
+	public void get_month_from_user_test() {
+		
+		String testDate = "01-01-1992";
+		//getMonth(testDate);
+		// Debugger throws null after line 31. Why?
+		
+		Assert.assertEquals(testDate, "01");
+	}
 	
 	@Test
 	public void spaces_at_user_selected_venue_id_test() {
@@ -130,8 +125,6 @@ public class DAOSpaceIntegrationTest extends DAOIntegrationTest {
 		
 		LocalDate actualDate = jdbcSpaceDao.getEndDate(startDate, numberNumberOfDays);
 		Assert.assertEquals(expectedDate, actualDate);
-		
-		// move to JUnit testing?
 	}
 	
 	@Test
@@ -143,8 +136,6 @@ public class DAOSpaceIntegrationTest extends DAOIntegrationTest {
 		
 		Assert.assertNotNull(availableRooms);
 	}
-	
-	
 	
 	private Space getSpace() {
 		//BigDecimal rate = new BigDecimal("$999999.00");
