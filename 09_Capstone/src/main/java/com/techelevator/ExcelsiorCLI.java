@@ -53,7 +53,7 @@ public class ExcelsiorCLI {
 			while (input == "1") {
 				
 				
-				menu.showVenueSpaces();
+				//menu.showVenueSpaces();
 				
 				
 				// print all ids and names venueDAO.getAllVenues();

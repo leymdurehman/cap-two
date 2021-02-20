@@ -169,6 +169,48 @@ private JdbcTemplate jdbcTemplate;
 		
 		return space;
 	}
+
+	@Override
+	public Reservation getReservationBy(long resID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Space getReservationBySpaceID(long spaceID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Reservation> getReservationByDateRange(Date startDate, Date endDate) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Reservation createReservation(Reservation newReservation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void saveReservation(Reservation savedReservation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<Space> getAvailableSpacesByByDateRange(Date startDate, Date endDate) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Space> getAvailableSpacesByByDateRange(Date startDate, Date endDate, int numOfAttendees) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 	
