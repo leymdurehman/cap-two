@@ -6,8 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import com.techelevator.excelsior.jdbc.JDBCSpaceDAO;
 import com.techelevator.excelsior.jdbc.JDBCVenueDAO;
+import com.techelevator.excelsior.model.Reservation;
 import com.techelevator.excelsior.model.Space;
+import com.techelevator.excelsior.model.SpaceDAO;
 import com.techelevator.excelsior.model.Venue;
 
 public class Menu {
@@ -16,6 +19,7 @@ public class Menu {
 	
 	private  Scanner in = new Scanner(System.in);
 	
+	double totalCost = 0.0;
 	
 	
 	public String showHomeMenu() {
@@ -140,47 +144,32 @@ public class Menu {
 	}
 	
 	
-//	When do you need the space? 9/29/2019
-//			How many days will you need the space? 5
-//			How many people will be in attendance? 100
-//
-//			The following spaces are available based on your needs:
-//
-//			Space #   Name                Daily Rate   Max Occup.   Accessible?   Total Cost
-//			111       The Rotunda         $350         100          Yes           $1,750
-//			333       The Golden Walrus   $900         150          No            $4,500
-//
-//			Which space would you like to reserve (enter 0 to cancel)? 111
-//			Who is this reservation for? Happy Madison
-//
-//			Thanks for submitting your reservation! The details for your event are listed below:
-//
-//			Confirmation #: 98783478
-//			         Venue: Trapp Family Lodge
-//			         Space: The Rotunda
-//			  Reserved For: Happy Madison
-//			     Attendees: 100
-//			  Arrival Date: 9/29/2019
-//			   Depart Date: 10/3/2019
-//			    Total Cost: $1,750
-	
-	
-	
-	//to be completed! with additional info for reservation confirmation
-	public String spaceReservationMenu( List<Space> availableSpaces){
+
+		
+		public String spaceStartDate() {
+			System.out.println("When do you need the space? (YYYY-MM-DD) ");
+			String userDateChoice = in.nextLine();
+			return userDateChoice;
+		}
+		
+		public int lengthOfStay() {
+			System.out.println("How many days will you need the space? ");
+			String userSpanChoice = in.nextLine();
+			int userSpanChoiceAsInt = Integer.parseInt(userSpanChoice);
+			
+			return userSpanChoiceAsInt;
+		}
+		
+		public int attendanceNumber() {
+			System.out.println("How many people will be in attendance? ");
+			String userAttendanceChoice = in.nextLine();
+			int attendanceNumberAsInt = Integer.parseInt(userAttendanceChoice);
+			return attendanceNumberAsInt;
+		}
 		
 		
-		System.out.println("When do you need the space?");
-		String userDateChoice = in.nextLine();
-		
-		System.out.println("How many days will you need the space?");
-		String userSpanChoice = in.nextLine();
-		int userSpanChoiceAsInt = Integer.parseInt(userSpanChoice);
-		
-		System.out.println("How many people will be in attendance?");
-		String userAttendanceChoice = in.nextLine();
-		
-		System.out.println("The following spaces are available based on your needs:");
+		public void spaceReservationMenu( List<Space> availableSpaces){
+		System.out.println("The following spaces are available based on your needs: ");
 		System.out.println();
 		
 		System.out.printf("%10s %20s %20s %20s %20s %20s ", "Space #" + "Name" + "Daily Rate" 
@@ -189,22 +178,49 @@ public class Menu {
 		
 		for (Space space : availableSpaces) {
 			int i = 1;
+			// ??? Christian
 			
-			double totalCost = userSpanChoiceAsInt * space.getDailyRate();
+			this.totalCost = lengthOfStay() * space.getDailyRate();
 			System.out.printf("%10s %20s %20s %20s %20s %20s", "#" + space.getId() + space.getName() 
 					+ space.getDailyRate() + space.getMaxOccupancy() 
 					+ space.isAccessible() + totalCost);
+			}
 		
+		}
 		
-		String userChoice = in.nextLine();
+		public String userSpaceSelection() {
+			System.out.println("Which space would you like to reserve? ");
+			String userSpaceSelection = in.nextLine();
+			return userSpaceSelection;
+		}
+		public String userName() {
+			System.out.println("Who is this reservation for? ");
+			String reservationName = in.nextLine();
+			return reservationName;
+		}
 		
-		return userChoice;
+		public void userReservation (Reservation reservation, Space space, Venue venue) { 
+		System.out.println("Thanks for submitting your reservation! The details for your event are listed below:/n");
+		int confirmationNumber = 0;
+		System.out.println("Confirmation #: " + confirmationNumber);
+		
+		System.out.println("Venue: " + venue.getName());
+		
+		System.out.println("Space: " + space.getName());
+		
+		System.out.println("Reserved For: " + reservation.getReservedFor());
+		
+		System.out.println("Attendees: " + reservation.getNumberOfattendees());
+		
+		System.out.println("Arrival Date: " + spaceStartDate());
+		
+		System.out.println("Departure Date: " + reservation.getEndDate());
+		
+		System.out.println("Total Cost: " + totalCost);
+	
 	}
 	
-	
-	
-	
-	}
+}
 	
 	
 	

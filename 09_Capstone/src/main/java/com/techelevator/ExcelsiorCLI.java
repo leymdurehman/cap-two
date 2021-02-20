@@ -45,28 +45,27 @@ public class ExcelsiorCLI {
 	}
 
 	public void run() {
-		
-		// menu . display menu
 		String input = "0";
+		menu.showHomeMenu();
+		menu.showVenueNamesMenu(List<Venue> XXXXXXXX);
 			
 		if ( input != "1" || input != "Q" ) {
 			while (input == "1") {
-				
-				
-				//menu.showVenueSpaces();
-				
-				
-				// print all ids and names venueDAO.getAllVenues();
-				// long venueID = venue.getId();
+					
+				menu.showVenueNames();		
+				// needs a venue id to pass here!!!
 				
 				while( input == "venueID") {
 					// venue ID is a scanner input variable
+					menu.showVenueDetails(venue);
 					
 					
 					if (input == "1") {
 						// View Spaces
 						// List venue Spaces
 						// id, name, open / close months, daily rate, max occupancy
+						
+						menu.printVenueSpaces();
 						
 						if (input == "1") {
 							// Reserve a Space
@@ -112,21 +111,13 @@ public class ExcelsiorCLI {
 				
 			}
 		
-			if (input == "R") {
+			if (input == "Q") {
 				System.exit(1);
 			}
 		
-		
-		
 		}
+		System.out.println("Please enter valid response.");	
 		
-		System.exit(1);
-		
-		
-		
-		
-		
-		
-
 	}
+	
 }
