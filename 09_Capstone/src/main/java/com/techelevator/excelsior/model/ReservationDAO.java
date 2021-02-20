@@ -25,14 +25,25 @@ public interface ReservationDAO {
 	public void saveReservation(Reservation savedReservation); 
 	
 	
-	public void deleteReservation(Reservation reservation);
+	public void deleteReservation(String reservedFor);
 
 
-	Reservation getReservationById(long resID);
+
 
 
 	public Reservation createReservation(int spaceID, int maxOccupancy, String startDate, String EndDate, String reservedFor);
-	
+
+
+	Reservation getReservationsById(long resId);
+
+
+	List<Space> getAvailableSpacesByByDateRange(Date startDate, Date endDate);
+
+
+	List<Space> getAvailableSpacesByByDateRange(Date startDate, Date endDate, int numOfAttendees);
+
+
+
 	
 	
 }
