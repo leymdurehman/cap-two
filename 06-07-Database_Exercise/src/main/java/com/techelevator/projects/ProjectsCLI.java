@@ -1,10 +1,94 @@
 package com.techelevator.projects;
 
+
+
+
+
+
+
+
+public static void main(String[] args) {
+	ExcelsiorCLI application = new ExcelsiorCLI(dataSource);
+	application.run();
+}
+	
+//	this.menu = new Menu(System.in, System.out);
+	BasicDataSource dataSource = new BasicDataSource();
+	dataSource.setUrl("jdbc:postgresql://localhost:5432/excelsior-venues");
+	dataSource.setUsername("postgres");
+	dataSource.setPassword("postgres1");
+	
+	venueDAO = new JDBCVenueDAO(dataSource);
+	
+
+
+}
+
+public ExcelsiorCLI(DataSource datasource) {
+	
+	
+	venueDAO =
+	
+
+}
+
+public void run() {
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import java.util.List;
 import java.util.Scanner;
 
+import javax.sql.DataSource;
+
 import org.apache.commons.dbcp2.BasicDataSource;
 
+import com.techelevator.ExcelsiorCLI;
+import com.techelevator.excelsior.model.Reservation;
+import com.techelevator.excelsior.model.ReservationDAO;
+import com.techelevator.excelsior.model.Space;
+import com.techelevator.excelsior.model.SpaceDAO;
+import com.techelevator.excelsior.model.Venue;
+import com.techelevator.excelsior.model.VenueDAO;
 import com.techelevator.projects.model.Department;
 import com.techelevator.projects.model.DepartmentDAO;
 import com.techelevator.projects.model.Employee;

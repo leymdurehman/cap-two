@@ -7,8 +7,8 @@ public class Reservation {
 private long reservationID;
 private long spaceID;
 private int numberOfattendees;
-private Date startDate;
-private Date endDate;
+private String startDate;
+private String endDate;
 private String reservedFor;
 
 public long getReservationID() {
@@ -29,16 +29,16 @@ public int getNumberOfattendees() {
 public void setNumberOfattendees(int numberOfattendees) {
 	this.numberOfattendees = numberOfattendees;
 }
-public Date getStartDate() {
+public String getStartDate() {
 	return startDate;
 }
-public void setStartDate(Date startDate) {
+public void setStartDate(String startDate) {
 	this.startDate = startDate;
 }
-public Date getEndDate() {
+public String getEndDate() {
 	return endDate;
 }
-public void setEndDate(Date endDate) {
+public void setEndDate(String endDate) {
 	this.endDate = endDate;
 }
 public String getReservedFor() {
