@@ -9,16 +9,18 @@ import javax.sql.DataSource;
 
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
-import com.techelevator.city.City;
-import com.techelevator.city.JDBCCityDAO;
+import org.springframework.jdbc.core.JdbcTemplate;
 import com.techelevator.excelsior.jdbc.JDBCVenueDAO;
 import com.techelevator.excelsior.model.Venue;
-import com.techelevator.projects.model.Project;
+
+import junit.framework.Assert;
 
 public class JDBCVenueDAOTest {
 	
@@ -26,11 +28,11 @@ public class JDBCVenueDAOTest {
 	private static SingleConnectionDataSource dataSource;
 
 	private JDBCVenueDAO dao;
+	private JdbcTemplate jdbcTemplate;
+	private static final long FAKE_CITY_ID = 888888;
 	
 
-	/*
-	 * Before any tests are run, this method initializes the datasource for testing.
-	 */
+
 	@BeforeClass
 	public static void setupDataSource() {
 		dataSource = new SingleConnectionDataSource();
@@ -53,6 +55,29 @@ public class JDBCVenueDAOTest {
 		dataSource.destroy();
 	}
 
+	
+	@Before
+	public void setup() {
+		dao = new JDBCVenueDAO(dataSource);
+		jdbcTemplate = new JdbcTemplate(dataSource);
+		
+		String sqlInsertVenue = "INSERT INTO city (id, name, state_abbreviation) "
+			  + "VALUES (?, 'Christian', 'OH')";
+		//JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		jdbcTemplate.update(sqlInsertVenue, FAKE_CITY_ID);
+		
+		//dao = new JDBCVenueDAO(dataSource);
+	}
+	
+//	@Before
+//	public void setup() {
+//		jdbcSpaceDao = new JDBCSpaceDAO(dataSource);
+//		jdbcTemplate = new JdbcTemplate(dataSource);
+//	}
+	
+	
+	
+
 	/*
 	 * After each test, we rollback any changes that were made to the database so
 	 * that everything is clean for the next test
@@ -70,35 +95,29 @@ public class JDBCVenueDAOTest {
 		return dataSource;
 	}
 	
-	
-	
-	
+
 	@Test
 	public void get_venue_names() {
 		
 //		String sqlInsertVenue = "INSERT INTO venue (venue_id, venue_name, description, category) "
-//				+ "VALUES (1000, 'FunFactory', 'The test place to have fun at a factory', 'SuperFun')";
-//		
-//		update(sqlInsertVenue);
+//				+ "VALUES (1000, 'FunFactory', 'The test place to have fun at a factory', 'SuperFun')";		
+//		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+//		jdbcTemplate.update(sqlInsertVenue);
 //		
 //		Venue testVenue;
 //		testVenue = makeNewVenue();
 //		
 	
-		makeNewVenue();
+		List<Venue> oldResults = dao.getAllVenues(); //old list prior to add
+		int sizeOfOldList = oldResults.size(); //size of old list
 		
-		List<Venue> results = dao.getAllVenues();
+		save(makeNewVenue()); //save to add new venue (+1)
 		
-		assertEquals(2, results.size());
+		List<Venue> results = dao.getAllVenues(); //new list
 		
-		
-		
-		
-		
-		
+		Assert.assertEquals(sizeOfOldList + 1, results.size());
 		
 	}
-	
 	
 	
 	
@@ -108,6 +127,7 @@ public class JDBCVenueDAOTest {
 		testVenue.setName("The Fun Factory Tester");
 		testVenue.setDescription("The test place to have fun at a factory");
 		testVenue.setCategory("SuperFun");
+		testVenue.setCityID(FAKE_CITY_ID);
 		
 		return testVenue;
 	}
@@ -117,13 +137,30 @@ public class JDBCVenueDAOTest {
 		theVenue = new Venue();
 		theVenue.setId(results.getLong("venue_id"));
 		theVenue.setName(results.getString("venue_name"));
-//		theVenue.setCityID(results.getLong("city"));
+		theVenue.setCityID(results.getLong("city_id"));
 		theVenue.setDescription(results.getString("description"));
-		theVenue.setCategory(results.getString("category_name"));
+		//theVenue.setCategory(results.getString("category_name"));
 		
 		return theVenue;
 	}
 	
+	
+	private void save(Venue newVenue) {
+		String sqlInsertVenue = "INSERT INTO venue(venue_id, venue_name, description, city_id) "
+				+ "VALUES(DEFAULT, ?, ?, ?)";
+		newVenue.setId(getNextVenueId());
+		jdbcTemplate.update(sqlInsertVenue, newVenue.getName(), newVenue.getDescription(), newVenue.getCityID());
+	}
+	
+	
+	private long getNextVenueId() {
+		SqlRowSet nextIdResult = jdbcTemplate.queryForRowSet("SELECT nextval('seq_venue_id')");
+		if(nextIdResult.next()) {
+			return nextIdResult.getLong(1);
+		} else {
+			throw new RuntimeException("Something went wrong while getting an id for the new venue");
+		}
+	}
 	
 	
 	

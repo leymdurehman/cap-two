@@ -4,7 +4,7 @@ public class Venue {
 	
 private long id;
 private String name;
-//private long cityID;
+private long cityID;
 private String description;
 private String city;
 private String Category;
@@ -42,12 +42,12 @@ public void setDescription(String description) {
 	this.description = description;
 }
 
-//public long getCityID() {
-//return cityID;
-//}
-//public void setCityID(long cityID) {
-//this.cityID = cityID;
-//}
+public long getCityID() {
+return cityID;
+}
+public void setCityID(long cityID) {
+this.cityID = cityID;
+}
 	
 	
 	

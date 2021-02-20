@@ -68,6 +68,8 @@ public abstract class DAOIntegrationTest {
 	private Venue getVenue(String name, long cityId, String description, int id) {
 		Venue testVenue = new Venue();
 		testVenue.setCityID(cityId);
+		// error in city setter??
+		
 		testVenue.setDescription(description);
 		testVenue.setId(id);
 		testVenue.setName(name);

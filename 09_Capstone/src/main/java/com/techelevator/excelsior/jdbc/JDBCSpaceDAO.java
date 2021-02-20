@@ -1,11 +1,7 @@
 package com.techelevator.excelsior.jdbc;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -19,7 +15,7 @@ import com.techelevator.excelsior.model.SpaceDAO;
 
 public class JDBCSpaceDAO implements SpaceDAO{
 
-	private Space space = new Space();
+	//private Space space = new Space();
 	private JdbcTemplate jdbcTemplate;
 	
 	public JDBCSpaceDAO(DataSource dataSource) {
@@ -43,14 +39,13 @@ public class JDBCSpaceDAO implements SpaceDAO{
 	public List<Space> getSpacesByClient(LocalDate startDate, LocalDate endDate) {
 		// check availability of a space by date
 		
-		String sql = "SELECT * FROM reservation WHERE NOT (start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?)";
+		String sql = "SELECT space_id FROM reservation WHERE NOT (start_date BETWEEN CAST(? AS DATE) AND CAST(? AS DATE)) OR (end_date BETWEEN CAST(? AS DATE) AND CAST(? AS DATE))";
 		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, startDate, endDate, startDate, endDate);
 		
 		List<Space> availableSpaces = new ArrayList<Space>();
 		
 		while(rows.next()) {
 			availableSpaces.add(mapRowToSpace(rows));
-			
 		}
 		
 		return availableSpaces;
@@ -95,7 +90,6 @@ public class JDBCSpaceDAO implements SpaceDAO{
 		space.setDailyRate(row.getBigDecimal("daily_rate"));
 		// set daily rate may need to be changed to BigDecimal?
 		space.setId(row.getInt("id"));
-		// is it space_id or just 'id'?
 		space.setMaxOccupancy(row.getInt("max_occupancy"));
 		space.setName(row.getString("name"));
 		space.setOpenFrom(row.getInt("open_from"));
