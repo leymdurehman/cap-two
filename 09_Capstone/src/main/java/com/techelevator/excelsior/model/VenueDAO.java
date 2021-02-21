@@ -1,5 +1,6 @@
 package com.techelevator.excelsior.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface VenueDAO {
@@ -24,7 +25,7 @@ public interface VenueDAO {
 
 
 
-	public Venue returnVenueInfoById(long venueId);
+	public ArrayList<Venue> returnVenueInfoById(long venueId);
 	
 
 	// return string category name

@@ -65,12 +65,12 @@ public class ExcelsiorCLI {
 				
 				while(choice != "Q") {
 					
-					int inputToInt = Integer.parseInt(choice);
+					int venuIDInput = Integer.parseInt(choice);
 					// Venue venueChoice = venueDAO.returnVenueInfoById(inputToInt);
 					//String userInput = menu.showVenueDetails(venueChoice);
-					menu.displayVenueDetails(venueMap.get(inputToInt));
-					menu.printVenueCategories(venueDAO.getCategoryFromVenueID(venueMap.get(inputToInt).getId()));
-					menu.showVenueDetails(venueMap.get(inputToInt));
+					menu.displayVenueDetails(venueMap.get(venuIDInput));
+					menu.printVenueCategories(venueDAO.getCategoryFromVenueID(venueMap.get(venuIDInput).getId()));
+					menu.showVenueDetails(venueMap.get(venuIDInput));
 					
 					if (input == "1") {
 						String userSelectionViewSpaces = menu.venueDetailsMenu();

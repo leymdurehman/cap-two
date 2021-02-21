@@ -89,7 +89,7 @@ public class JDBCVenueDAO implements VenueDAO{
 	@Override
 	public List<String> getCategoryFromVenueID(long venueID) {
 		
-		String sqlCategories = "select category.name" + 
+		String sqlCategories = "select venue_id, category.name" + 
 				"	from venue " + 
 				"	join city on venue.city_id = city.id  " + 
 				"	join state on city.state_abbreviation = state.abbreviation " + 
@@ -99,16 +99,16 @@ public class JDBCVenueDAO implements VenueDAO{
 		
 		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlCategories, venueID);
 		
-		Venue theVenue; //= new Venue();
-		ArrayList<Venue> categoriesList = new ArrayList<>();
-		ArrayList<String> categoryStringList = new ArrayList<>();
+		//Venue theVenue; //= new Venue();
+		ArrayList<String> categoriesList = new ArrayList<>();
+		//ArrayList<String> categoryStringList = new ArrayList<>();
 		
 		while(results.next()) {
-			theVenue = mapRowToVenue(results);
-			categoriesList.add(theVenue);
-			categoryStringList.add(theVenue.getCategory());
+			String category = mapRowToCategoryName(results);
+			categoriesList.add(category);
+	
 		}
-		return categoryStringList;
+		return categoriesList;
 		
 	}
 	
@@ -120,7 +120,19 @@ public class JDBCVenueDAO implements VenueDAO{
 //	join category_venue on category_venue.venue_id = venue.id
 //	join category on category_venue.category_id = category.id
 //	where venue.id = ?
-	
+	public String mapRowToCategoryName(SqlRowSet result) {
+		Venue venue = new Venue();
+		venue.setCategory(result.getString("name"));
+				
+		String category = venue.getCategory();
+		
+		
+		
+		return category;
+			
+			
+			
+	}
 	
 	
 	
@@ -156,10 +168,14 @@ public class JDBCVenueDAO implements VenueDAO{
 
 
 	@Override
-	public Venue returnVenueInfoById(long venueId) {
+	public ArrayList<Venue> returnVenueInfoById(long venueId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+
+
 
 	
 	

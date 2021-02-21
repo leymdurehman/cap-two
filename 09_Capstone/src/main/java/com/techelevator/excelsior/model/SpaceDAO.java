@@ -18,7 +18,9 @@ public interface SpaceDAO {
 	public String getMonth(String customerDate);
 	
 	
-	public LocalDate getEndDate(LocalDate startDate, int numberNumberOfDays); 
+	public LocalDate getEndDate(LocalDate startDate, int numberNumberOfDays);
+
+	String getEndDate(String startDate, int numOfDays); 
 	
 	// adding num of days to start date
 	
