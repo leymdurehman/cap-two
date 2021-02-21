@@ -1,5 +1,7 @@
 package com.techelevator;
 
+import java.util.Map;
+
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -32,42 +34,58 @@ public class ExcelsiorCLI {
 		dataSource.setUrl("jdbc:postgresql://localhost:5432/excelsior-venues");
 		dataSource.setUsername("postgres");
 		dataSource.setPassword("postgres1");
+		
+		Venue venue = new Venue();
+		Reservation reservation = new Reservation();
+		Space space = new Space();
+		Menu menu = new Menu();
 
-		ExcelsiorCLI application = new ExcelsiorCLI(dataSource);
+		ExcelsiorCLI application = new ExcelsiorCLI(dataSource, menu);
 		application.run();
 	}
 
-	public ExcelsiorCLI(DataSource datasource) {
-		//this.menu = new Menu(System.in, System.out);
+	public ExcelsiorCLI(DataSource datasource, Menu menu) {
+		this.menu = new Menu();
 		venueDAO = new JDBCVenueDAO(datasource);
 		spaceDAO = new JDBCSpaceDAO(datasource);
 		reservationDAO = new JDBCReservationDAO(datasource);
+		
 	}
 
 	public void run() {
-		String input = "0";
-		menu.showHomeMenu();
-		menu.showVenueNamesMenu(List<Venue> XXXXXXXX);
+		//String input = "1";
+		String input = menu.showHomeMenu();
+		//menu.showVenueNamesMenu();
 			
-		if ( input != "1" || input != "Q" ) {
-			while (input == "1") {
+		//if ( input != "1" || input != "Q" || input != "123456789") {
+			while (input != "Q") {
 					
-				menu.showVenueNames();		
-				// needs a venue id to pass here!!!
+				Map<Integer,Venue> venueMap = menu.showVenueNamesMenu(venueDAO.getAllVenues());	
+				String choice = menu.venueChoice();
 				
-				while( input == "venueID") {
-					// venue ID is a scanner input variable
-					menu.showVenueDetails(venue);
+				while(choice != "Q") {
 					
+					int inputToInt = Integer.parseInt(choice);
+					// Venue venueChoice = venueDAO.returnVenueInfoById(inputToInt);
+					//String userInput = menu.showVenueDetails(venueChoice);
+					menu.displayVenueDetails(venueMap.get(inputToInt));
+					menu.printVenueCategories(venueDAO.getCategoryFromVenueID(venueMap.get(inputToInt).getId()));
+					menu.showVenueDetails(venueMap.get(inputToInt));
 					
 					if (input == "1") {
+						String userSelectionViewSpaces = menu.venueDetailsMenu();
+						
+						
+						
 						// View Spaces
 						// List venue Spaces
 						// id, name, open / close months, daily rate, max occupancy
 						
-						menu.printVenueSpaces();
+						//menu.printVenueSpaces();
 						
-						if (input == "1") {
+						if (userSelectionViewSpaces == "1") {
+							
+							
 							// Reserve a Space
 							// printLn to user - When do you need the space
 							// print ln to user how many days?
@@ -116,8 +134,8 @@ public class ExcelsiorCLI {
 			}
 		
 		}
-		System.out.println("Please enter valid response.");	
+		//System.out.println("Please enter valid response.");	
 		
 	}
 	
-}
+//}

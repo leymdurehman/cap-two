@@ -1,9 +1,13 @@
 package com.techelevator;
 
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 import com.techelevator.excelsior.jdbc.JDBCSpaceDAO;
@@ -21,7 +25,10 @@ public class Menu {
 	
 	double totalCost = 0.0;
 	
-	
+
+
+
+
 	public String showHomeMenu() {
 		
 		System.out.println("What would you like to do?");
@@ -37,19 +44,31 @@ public class Menu {
 
 
 	
-	private void showVenueNamesMenu(List<Venue> venueList) {
-		for (Venue venue : venueList) {
-			int i = 1;
+	public Map<Integer, Venue> showVenueNamesMenu(List<Venue> venueList) {
+		//List<Venue> venueList = new ArrayList<Venue>();
+		Map <Integer, Venue> venueMap = new LinkedHashMap<Integer, Venue>();
+		
+		int i = 1;
+		for (Venue venue : venueList) {	
 			System.out.println(i + ") " + venue.getName());
+			venueMap.put(i, venue);
 			i++;
+			
 		}
+		return venueMap;
+		
+	}
+	
+	public String venueChoice() {
 		System.out.println("Q) Quit");
 		System.out.println("Which venue would you like to view?");
 		String userChoice = in.nextLine();
+		
+		return userChoice;
 	}
 	
 	
-	private void printVenueSpaces(List<Space> spacesForVenue) {
+	public void printVenueSpaces(List<Space> spacesForVenue) {
 		for (Space space : spacesForVenue) {
 			int i = 1;
 			System.out.println(i + ") " + space.getName());
@@ -73,13 +92,14 @@ public class Menu {
 	
 	
 	public void showVenueDetails(Venue venue) {
-		
-		System.out.println(venue.getName()); //**********************************
-		System.out.println("Location: " + venue.getCity() + ", " + venue.getState());
-	
 		System.out.println();
 		System.out.println(venue.getDescription()); //**********************************
 		System.out.println();
+	}
+	
+	public void displayVenueDetails(Venue venueMap) {
+		System.out.printf(venueMap.getName());
+		System.out.printf(venueMap.getCity() + ", " + venueMap.getState());
 	}
 		
 		
