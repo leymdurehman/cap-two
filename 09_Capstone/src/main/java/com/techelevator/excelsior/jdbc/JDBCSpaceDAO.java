@@ -46,6 +46,7 @@ public class JDBCSpaceDAO implements SpaceDAO{
 		
 		while(rows.next()) {
 			availableSpaces.add(mapRowToSpace(rows));
+			// this method should map row to reservation??
 		}
 		
 		return availableSpaces;

@@ -1,5 +1,7 @@
 package com.techelevator;
 
+import java.util.Map;
+
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -32,58 +34,108 @@ public class ExcelsiorCLI {
 		dataSource.setUrl("jdbc:postgresql://localhost:5432/excelsior-venues");
 		dataSource.setUsername("postgres");
 		dataSource.setPassword("postgres1");
+		
+		Venue venue = new Venue();
+		Reservation reservation = new Reservation();
+		Space space = new Space();
+		Menu menu = new Menu();
 
-		ExcelsiorCLI application = new ExcelsiorCLI(dataSource);
+		ExcelsiorCLI application = new ExcelsiorCLI(dataSource, menu);
 		application.run();
 	}
 
-	public ExcelsiorCLI(DataSource datasource) {
-		//this.menu = new Menu(System.in, System.out);
+	public ExcelsiorCLI(DataSource datasource, Menu menu) {
+		this.menu = new Menu();
 		venueDAO = new JDBCVenueDAO(datasource);
 		spaceDAO = new JDBCSpaceDAO(datasource);
 		reservationDAO = new JDBCReservationDAO(datasource);
+		
 	}
 
 	public void run() {
-		
-		// menu . display menu
-		int input = 1;
-		while (input == 1) {
+		//String input = "1";
+		String input = menu.showHomeMenu();
+		//menu.showVenueNamesMenu();
 			
-			// print all ids and names venueDAO.getAllVenues();
-			long venueID = venue.getId();
-			while( input == venueID) {
-				Venue venueForCustomer = venueDAO.returnVenueInfoById(venueID);
-				//method function
-				venueForCustomer.getName();
-				//venueForCustomer.getCity()
-				//venueForCustomer.g
-			//	println venue.
+		//if ( input != "1" || input != "Q" || input != "123456789") {
+			while (input != "Q") {
+					
+				Map<Integer,Venue> venueMap = menu.showVenueNamesMenu(venueDAO.getAllVenues());	
+				String choice = menu.venueChoice();
+				
+				while(choice != "Q") {
+					
+					int inputToInt = Integer.parseInt(choice);
+					// Venue venueChoice = venueDAO.returnVenueInfoById(inputToInt);
+					//String userInput = menu.showVenueDetails(venueChoice);
+					menu.displayVenueDetails(venueMap.get(inputToInt));
+					menu.printVenueCategories(venueDAO.getCategoryFromVenueID(venueMap.get(inputToInt).getId()));
+					menu.showVenueDetails(venueMap.get(inputToInt));
+					
+					if (input == "1") {
+						String userSelectionViewSpaces = menu.venueDetailsMenu();
+						
+						
+						
+						// View Spaces
+						// List venue Spaces
+						// id, name, open / close months, daily rate, max occupancy
+						
+						//menu.printVenueSpaces();
+						
+						if (userSelectionViewSpaces == "1") {
+							
+							
+							// Reserve a Space
+							// printLn to user - When do you need the space
+							// print ln to user how many days?
+							// println to user how many people in attendance?
+							
+							// println to user the spaces that meet criteria
+							
+							// println to user which space would you like to reserve?
+							// who is it for?
+							
+							// print out confirmation Number
+							
+							if (input == "0") {
+								break;
+							}
+							
+						if (input == "R") {
+							// break to previous screen
+							break;
+						}
+						}
+						
+					}
+					if (input == "2") {
+						// Search for reservation with user set input
+					}
+					else if (input == "R"){
+						// return to previous screen
+						break;
+					}
+					
+					
+					
+				}
+			
+				if (input == "R") {
+					//Return to previous screen
+					break;
+				}	
 				
 				
 			}
 		
-			
-			
-			
-			
-			
-			
+			if (input == "Q") {
+				System.exit(1);
+			}
+		
 		}
-	
+		//System.out.println("Please enter valid response.");	
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-
 	}
-}
+	
+//}
