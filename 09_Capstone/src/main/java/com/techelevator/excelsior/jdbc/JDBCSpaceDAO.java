@@ -100,4 +100,10 @@ public class JDBCSpaceDAO implements SpaceDAO{
 		
 		return space;
 	}
+
+	@Override
+	public String getEndDate(String startDate, int numOfDays) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -108,13 +108,23 @@ private JdbcTemplate jdbcTemplate;
 	}
 
 	
+	// three methods below - can make unit tests
+	
+	//below- test 
+	public String getEndDate(String startDate, int numOfDays) {
+		
+        LocalDate startDateAsDate = LocalDate.parse(startDate);
+        LocalDate endDateAsDate = startDateAsDate.plusDays(numOfDays);
+        String endDate = endDateAsDate.toString();
+        return endDate;
+    }
 	
 	
+	
+	
+	// (below) - perhaps test when someone passes something too short for the substring length 7 (like 2021 instead of full date)
 	public int getStartMonthNum(String startDate){
-
-
-
-        String startMonth = startDate.substring(5,7);
+    String startMonth = startDate.substring(5,7);
 
         int startMonthNum = Integer.parseInt(startMonth);
 
@@ -125,8 +135,6 @@ private JdbcTemplate jdbcTemplate;
 	
 	
 	public int getEndMonthNum(String endDate){
-
-
 
         String endMonth = endDate.substring(5,7);
 

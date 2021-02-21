@@ -71,7 +71,7 @@ public class ExcelsiorCLI {
 					menu.displayVenueDetails(venueMap.get(venuIDInput));
 					menu.printVenueCategories(venueDAO.getCategoryFromVenueID(venueMap.get(venuIDInput).getId()));
 					menu.showVenueDetails(venueMap.get(venuIDInput));
-					
+					// need to make a map row to city (error = null @ city, @state abbrv)
 					if (input == "1") {
 						String userSelectionViewSpaces = menu.venueDetailsMenu();
 						
