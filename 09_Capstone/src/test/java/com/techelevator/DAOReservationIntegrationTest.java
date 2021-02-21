@@ -83,9 +83,9 @@ public class DAOReservationIntegrationTest extends DAOIntegrationTest{
 	
 		
 		
-		String result = "INSERT INTO space (id, venue_id, name, open_from, open_to, daily_rate, max_occupancy) VALUES (?, 1, 'Library', 1, 12, '$140.00', 130)";
+		String result = "INSERT INTO space (id, venue_id, name, open_from, open_to, daily_rate, max_occupancy) VALUES (111, 11, 'Library', 1, 12, '$140.00', 130)";
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		jdbcTemplate.update(result, FAKE_SPACE_ID);
+		jdbcTemplate.update(result);
 		reservationDAO = new JDBCReservationDAO(dataSource);
 	}
 	

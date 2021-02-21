@@ -58,9 +58,7 @@ private JdbcTemplate jdbcTemplate;
 		
 		String sql = "SELECT space.id, space.venue_id, space.name, space.is_accessible, space.open_from, space.open_to, space.daily_rate, space.max_occupancy \n" + 
 				"FROM space\n" + 
-				"JOIN reservation ON space.id = reservation.space_id\n" + 
-				"WHERE (NOT (start_date BETWEEN CAST(? AS DATE) AND CAST(? AS DATE)))\n" + 
-				"AND (NOT (end_date BETWEEN CAST(? AS DATE) AND CAST(? AS DATE)))\n" + 
+				"WHERE space.id NOT IN (SELECT space_id FROM reservation where (start_date BETWEEN CAST(? AS DATE) AND CAST(? AS DATE)) AND (end_date BETWEEN CAST(? AS DATE) AND CAST(? AS DATE)))\n" + 
 				"AND max_occupancy <= ? AND (open_from BETWEEN ? AND ?) AND (open_to BETWEEN ? AND ?) AND space.venue_id = ?";
 		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, startDate, endDate, startDate, endDate, numOfAttendees, startMonth,  endMonth, startMonth, endMonth, venueID );
 		
@@ -168,6 +166,48 @@ private JdbcTemplate jdbcTemplate;
 		space.setVenueID(row.getInt("venue_id"));
 		
 		return space;
+	}
+
+	@Override
+	public Reservation getReservationBy(long resID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Space getReservationBySpaceID(long spaceID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Reservation> getReservationByDateRange(Date startDate, Date endDate) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Reservation createReservation(Reservation newReservation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void saveReservation(Reservation savedReservation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<Space> getAvailableSpacesByByDateRange(Date startDate, Date endDate) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Space> getAvailableSpacesByByDateRange(Date startDate, Date endDate, int numOfAttendees) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	
