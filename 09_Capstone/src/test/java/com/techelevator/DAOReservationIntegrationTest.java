@@ -76,13 +76,7 @@ public class DAOReservationIntegrationTest extends DAOIntegrationTest{
 	
 	@Before
 	public void setup() {
-		;
-
-		
-		
 	
-		
-		
 		String result = "INSERT INTO space (id, venue_id, name, open_from, open_to, daily_rate, max_occupancy) VALUES (111, 11, 'Library', 1, 12, '$140.00', 130)";
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 		jdbcTemplate.update(result);
@@ -146,11 +140,11 @@ public class DAOReservationIntegrationTest extends DAOIntegrationTest{
 	}
 	
 	private Space getTestSpace() {
-		BigDecimal rate = new BigDecimal("999999.00");
+	//	BigDecimal rate = new BigDecimal("999999.00");
 		Space testSpace = new Space();
 		
 		testSpace.setAccessible(true);
-		testSpace.setDailyRate(rate);
+		testSpace.setDailyRate("$999999");
 		testSpace.setId(FAKE_SPACE_ID);
 		testSpace.setVenueID(1);
 		testSpace.setName("testName");

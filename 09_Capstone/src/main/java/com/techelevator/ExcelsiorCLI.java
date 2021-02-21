@@ -1,5 +1,7 @@
 package com.techelevator;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -26,7 +28,12 @@ public class ExcelsiorCLI {
 	private VenueDAO venueDAO;
 	private ReservationDAO reservationDAO;
 	private SpaceDAO spaceDAO;
-	
+	private static final String MAIN_MENU_QUIT = "Q";
+	private static final String RETURN_TO_PREVIOUS_MENU = "R";
+	private static final String VIEW_SPACES = "1";
+	private static final String LIST_VENUES = "1";
+	private static final String RESERVE_A_SPACE = "1";
+	//private stat
 	
 	
 	public static void main(String[] args) {
@@ -35,16 +42,13 @@ public class ExcelsiorCLI {
 		dataSource.setUsername("postgres");
 		dataSource.setPassword("postgres1");
 		
-		Venue venue = new Venue();
-		Reservation reservation = new Reservation();
-		Space space = new Space();
-		Menu menu = new Menu();
 
-		ExcelsiorCLI application = new ExcelsiorCLI(dataSource, menu);
+
+		ExcelsiorCLI application = new ExcelsiorCLI(dataSource);
 		application.run();
 	}
 
-	public ExcelsiorCLI(DataSource datasource, Menu menu) {
+	public ExcelsiorCLI(DataSource datasource) {
 		this.menu = new Menu();
 		venueDAO = new JDBCVenueDAO(datasource);
 		spaceDAO = new JDBCSpaceDAO(datasource);
@@ -52,90 +56,99 @@ public class ExcelsiorCLI {
 		
 	}
 
-	public void run() {
-		//String input = "1";
-		String input = menu.showHomeMenu();
-		//menu.showVenueNamesMenu();
-			
-		//if ( input != "1" || input != "Q" || input != "123456789") {
-			while (input != "Q") {
-					
-				Map<Integer,Venue> venueMap = menu.showVenueNamesMenu(venueDAO.getAllVenues());	
-				String choice = menu.venueChoice();
-				
-				while(choice != "Q") {
-					
-					int venuIDInput = Integer.parseInt(choice);
-					// Venue venueChoice = venueDAO.returnVenueInfoById(inputToInt);
-					//String userInput = menu.showVenueDetails(venueChoice);
-					menu.displayVenueDetails(venueMap.get(venuIDInput));
-					menu.printVenueCategories(venueDAO.getCategoryFromVenueID(venueMap.get(venuIDInput).getId()));
-					menu.showVenueDetails(venueMap.get(venuIDInput));
-					// need to make a map row to city (error = null @ city, @state abbrv)
-					if (input == "1") {
-						String userSelectionViewSpaces = menu.venueDetailsMenu();
-						
-						
-						
-						// View Spaces
-						// List venue Spaces
-						// id, name, open / close months, daily rate, max occupancy
-						
-						//menu.printVenueSpaces();
-						
-						if (userSelectionViewSpaces == "1") {
-							
-							
-							// Reserve a Space
-							// printLn to user - When do you need the space
-							// print ln to user how many days?
-							// println to user how many people in attendance?
-							
-							// println to user the spaces that meet criteria
-							
-							// println to user which space would you like to reserve?
-							// who is it for?
-							
-							// print out confirmation Number
-							
-							if (input == "0") {
-								break;
-							}
-							
-						if (input == "R") {
-							// break to previous screen
-							break;
-						}
-						}
-						
-					}
-					if (input == "2") {
-						// Search for reservation with user set input
-					}
-					else if (input == "R"){
-						// return to previous screen
-						break;
-					}
-					
-					
-					
-				}
-			
-				if (input == "R") {
-					//Return to previous screen
-					break;
-				}	
-				
-				
-			}
+public void run() {
 		
-			if (input == "Q") {
-				System.exit(1);
+
+	
+	
+  while (true) {	
+	String input = menu.showHomeMenu();
+	Map<Integer, Venue> venueMap = new HashMap<Integer, Venue>();
+	if (input.contentEquals(MAIN_MENU_QUIT)) {
+	return; // exits program
+	}	
+	else if (input.contentEquals(LIST_VENUES)) {
+		venueMap = menu.showVenueNamesMenu(venueDAO.getAllVenues()); //display all venues	
+		String customerVenueChoice = menu.venueChoice(); 
+			if (customerVenueChoice.contentEquals(RETURN_TO_PREVIOUS_MENU)) {
+				menu.showHomeMenu();
+		} else if(customerVenueChoice != "R") { 	
+		int venueIDInput = Integer.parseInt(customerVenueChoice);
+		menu.displayVenueDetails(venueMap.get(venueIDInput));
+		long venueIDCustomer = venueMap.get(venueIDInput).getId();
+		menu.printVenueCategories(venueDAO.getCategoryFromVenueID(venueIDCustomer));
+		menu.showVenueDetails(venueMap.get(venueIDInput));
+		String venueDetailschoice = menu.venueDetailsMenu();
+		if (venueDetailschoice.contentEquals(VIEW_SPACES)) {
+	List<Space> allSpacesFromVenue = spaceDAO.getAllSpacesforVenueID(venueIDCustomer);
+		Venue venueInfo = venueMap.get(venueIDInput);
+				menu.venueSpacesMenu(venueInfo,allSpacesFromVenue);
+		} String spaceChoice = menu.spaceDetailsMenu();
+			if(spaceChoice.contentEquals(RETURN_TO_PREVIOUS_MENU)) {
+				menu.venueDetailsMenu();
+				
 			}
+		if (spaceChoice.contentEquals(RESERVE_A_SPACE)) {
+			
+			String startDate = menu.spaceStartDate();
+			int numOfDays = menu.lengthOfStay();
+			int numOfPeople = menu.attendanceNumber();
+			String endDate = reservationDAO.getEndDate(startDate, numOfDays);
+			int startMonth = reservationDAO.getStartMonthNum(startDate);
+			int endMonth = reservationDAO.getEndMonthNum(endDate);
+			List<Space> availableSpaces= reservationDAO.getAvailableSpacesByByDateRange(startDate, endDate, 
+														numOfPeople, startMonth, endMonth, venueIDCustomer);
+			if (availableSpaces == null) {
+					menu.noAvabilibity();
+					menu.venueDetailsMenu();
+			} else
+					menu.spaceReservationMenu(availableSpaces, numOfDays);
+			int spaceID = menu.userSpaceSelection();
+			
+			if (spaceID == 0) {
+					menu.showHomeMenu();
+					
+			} else {
+					
+			String reservedName = menu.userName();
+				if (reservedName != null) {
+					
+			reservationDAO.createReservation(spaceID, numOfPeople, startDate, endDate, reservedName);
+							
+			
+			String spaceName = spaceDAO.getSpaceNameByClient(spaceID);
+			String venueName = venueMap.get(venueIDInput).getName();
+			
+			menu.userReservation(numOfPeople, reservedName, startDate, endDate, spaceName, venueName);
+		} menu.showHomeMenu();			
+					
+		}	
+		}
+	
+		
 		
 		}
-		//System.out.println("Please enter valid response.");	
-		
 	}
-	
-//}
+						
+  			
+						
+						
+					
+						
+  }						 
+					
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+}

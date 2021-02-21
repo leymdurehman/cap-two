@@ -20,7 +20,13 @@ public interface SpaceDAO {
 	
 	public LocalDate getEndDate(LocalDate startDate, int numberNumberOfDays);
 
-	String getEndDate(String startDate, int numOfDays); 
+	String getEndDate(String startDate, int numOfDays);
+
+	List<Space> getAllSpacesforVenueID(long userInputVenueId);
+
+	List<Space> getSpacesByClient(long u);
+
+	String getSpaceNameByClient(long userSpace); 
 	
 	// adding num of days to start date
 	

@@ -7,27 +7,18 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+
 import java.util.Scanner;
 
-import com.techelevator.excelsior.jdbc.JDBCSpaceDAO;
-import com.techelevator.excelsior.jdbc.JDBCVenueDAO;
 import com.techelevator.excelsior.model.Reservation;
 import com.techelevator.excelsior.model.Space;
-import com.techelevator.excelsior.model.SpaceDAO;
+
 import com.techelevator.excelsior.model.Venue;
 
 public class Menu {
 	
-	//JDBCVenueDAO jdbcVenueDao = new JDBCVenueDAO(datasource);
 	
 	private  Scanner in = new Scanner(System.in);
-	
-	double totalCost = 0.0;
-	
-
-
-
 
 	public String showHomeMenu() {
 		
@@ -39,9 +30,6 @@ public class Menu {
 		
 		return userChoice;
 	}
-	
-	
-
 
 	
 	public Map<Integer, Venue> showVenueNamesMenu(List<Venue> venueList) {
@@ -54,13 +42,12 @@ public class Menu {
 			venueMap.put(i, venue);
 			i++;
 			
-		}
+		} System.out.println("R) Return to Previous Screen");
 		return venueMap;
 		
 	}
 	
 	public String venueChoice() {
-		System.out.println("Q) Quit");
 		System.out.println("Which venue would you like to view?");
 		String userChoice = in.nextLine();
 		
@@ -68,10 +55,13 @@ public class Menu {
 	}
 	
 	
-	public void printVenueSpaces(List<Space> spacesForVenue) {
+	public void printVenueAllSpaces(List<Space> spacesForVenue) {
+		
+		
+		int i =1;
 		for (Space space : spacesForVenue) {
-			int i = 1;
-			System.out.println(i + ") " + space.getName());
+			
+			System.out.println("#" + i + space.getName() );
 			i++;
 		}
 		
@@ -140,14 +130,22 @@ public class Menu {
 		monthList.put(11, "Nov.");
 		monthList.put(12, "Dec.");
 		
+		int i = 1;
 		for (Space space : spacesPerVenue) {
-			int i = 1;
-			System.out.printf("%1s %4s %30s %10s %10s %10s %10s %10s", "#" + i + space.getName() 
-					+ monthList.get(space.getOpenFrom()) + monthList.get(space.getOpenTo()) 
-					+ space.getDailyRate() + space.getMaxOccupancy());
-		}
-		
+				
+			if (monthList.get(space.getOpenFrom()) != null ) {
+			System.out.println( "#" + i + "  " + space.getName() + "  "
+					+ monthList.get(space.getOpenFrom()) + "  " + monthList.get(space.getOpenTo()) 
+					+ "  "
+					+ space.getDailyRate() + "  " + space.getMaxOccupancy());
+			
+		} else {	System.out.println( "#" + i + "  " + space.getName() + "  "
+				+ "  "  + "  " + "  "  
+				+ "  "
+				+ space.getDailyRate() + "  " + space.getMaxOccupancy());
+		} i++;
 	}
+}
 	
 	public String spaceDetailsMenu(){
 		
@@ -169,6 +167,8 @@ public class Menu {
 		public String spaceStartDate() {
 			System.out.println("When do you need the space? (YYYY-MM-DD) ");
 			String userDateChoice = in.nextLine();
+			
+		
 			return userDateChoice;
 		}
 		
@@ -188,30 +188,46 @@ public class Menu {
 		}
 		
 		
-		public void spaceReservationMenu( List<Space> availableSpaces){
+		public void noAvabilibity() {
+			
+			System.out.println("Sorry there is no availability for those dates! Please try agan!");
+			
+			
+		}
+		
+		
+		
+		
+		
+		
+		public void spaceReservationMenu( List<Space> availableSpaces, int numOfdays){
 		System.out.println("The following spaces are available based on your needs: ");
 		System.out.println();
 		
-		System.out.printf("%10s %20s %20s %20s %20s %20s ", "Space #" + "Name" + "Daily Rate" 
-		+ "Max Occup." + "Accessible?" 
+		System.out.println("Space #" + "Name" + "Daily Rate" 
+		+ "Max Occup."
 		+ "Total Cost");
-		
+	
 		for (Space space : availableSpaces) {
-			int i = 1;
-			// ??? Christian
 			
-			this.totalCost = lengthOfStay() * space.getDailyRate();
-			System.out.printf("%10s %20s %20s %20s %20s %20s", "#" + space.getId() + space.getName() 
-					+ space.getDailyRate() + space.getMaxOccupancy() 
-					+ space.isAccessible() + totalCost);
+			//this.totalCost = lengthOfStay() * space.getDailyRate();
+			String dailyRate = space.getDailyRate();
+			String str = dailyRate.replaceAll(",", "");
+			String str2 = str.replace("$", "");
+			double dailyRateInt = Double.parseDouble(str2);
+			double totalCost = dailyRateInt * numOfdays;
+			
+			System.out.println("#" + space.getId() + "    " + space.getName() + "    "
+					+ space.getDailyRate() + "    " + space.getMaxOccupancy() + "    "
+					 + totalCost);
 			}
 		
 		}
 		
-		public String userSpaceSelection() {
-			System.out.println("Which space would you like to reserve? ");
-			String userSpaceSelection = in.nextLine();
-			return userSpaceSelection;
+		public int userSpaceSelection() {
+			System.out.println("Which space would you like to reserve (enter 0 to cancel)?");
+			int userSpace = in.nextInt();
+			return userSpace;
 		}
 		public String userName() {
 			System.out.println("Who is this reservation for? ");
@@ -219,24 +235,30 @@ public class Menu {
 			return reservationName;
 		}
 		
-		public void userReservation (Reservation reservation, Space space, Venue venue) { 
+		public void userReservation (int numOfAttendees, String reservedFor, String startDate, String endDate, String spaceName, String venue) { 
 		System.out.println("Thanks for submitting your reservation! The details for your event are listed below:/n");
+		
+		Map<Integer, String> confirmedReservation = new LinkedHashMap<Integer, String>();
+		
 		int confirmationNumber = 0;
+		
 		System.out.println("Confirmation #: " + confirmationNumber);
 		
-		System.out.println("Venue: " + venue.getName());
+		confirmedReservation.put(confirmationNumber, reservedFor);
 		
-		System.out.println("Space: " + space.getName());
+		System.out.println("Venue: " + venue);
 		
-		System.out.println("Reserved For: " + reservation.getReservedFor());
+		System.out.println("Space: " + spaceName);
 		
-		System.out.println("Attendees: " + reservation.getNumberOfattendees());
+		System.out.println("Reserved For: " + reservedFor);
 		
-		System.out.println("Arrival Date: " + spaceStartDate());
+		System.out.println("Attendees: " + numOfAttendees);
 		
-		System.out.println("Departure Date: " + reservation.getEndDate());
+		System.out.println("Arrival Date: " + startDate);
 		
-		System.out.println("Total Cost: " + totalCost);
+		System.out.println("Departure Date: " + endDate);
+		
+		//System.out.println("Total Cost: " + totalCost);
 	
 	}
 	

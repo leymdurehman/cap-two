@@ -23,36 +23,34 @@ public class JDBCSpaceDAO implements SpaceDAO{
 	}
 	
 	@Override
-	public List<Space> getAllSpacesforVenueID(int userInputVenueId) {
-		String sql = "SELECT * FROM space WHERE venue_id = ?";
+	public List<Space> getAllSpacesforVenueID(long userInputVenueId) {
+		String sql = "SELECT id, name, max_occupancy, open_from, open_to, venue_id, CAST(daily_rate AS varchar) FROM space WHERE venue_id = ? LIMIT 5";
 		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, userInputVenueId);
 		
 		List<Space> spacesInVenue = new ArrayList<Space>();
 		
 		while(rows.next()) {
-			spacesInVenue.add(mapRowToSpace(rows));
+			spacesInVenue.add(mapRowToAvailSpace(rows));
 		}	
 		return spacesInVenue;
 	}
 	
 	@Override
-	public List<Space> getSpacesByClient(LocalDate startDate, LocalDate endDate) {
+	public String getSpaceNameByClient(long userSpace) {
 		// check availability of a space by date
 		
-		String sql = "SELECT * FROM reservation WHERE NOT (start_date BETWEEN ? AND ? ) OR (end_date BETWEEN ? AND ? )";
-		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, startDate, endDate, startDate, endDate);
-		
-		List<Space> availableSpaces = new ArrayList<Space>();
-		
-		while(rows.next()) {
-			availableSpaces.add(mapRowToSpace(rows));
+		String sql = "SELECT name FROM space WHERE id = ?";
+		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, userSpace);
+		rows.next();
+			String name = (mapRowToSpaceName(rows));
 			// this method should map row to reservation??
-		}
 		
-		return availableSpaces;
+		
+		return name;
 	}
 
 	
+		
 	@Override
 	public String getMonth(String customerDate) {
 		// DESIGN CHOICE - How do we want user to input data?
@@ -88,8 +86,8 @@ public class JDBCSpaceDAO implements SpaceDAO{
 	// mapRowToReservation???
 	public Space mapRowToSpace(SqlRowSet row) {
 		Space space = new Space();
-		space.setAccessible(row.getBoolean("is_accessible"));
-		space.setDailyRate(row.getBigDecimal("daily_rate"));
+
+		space.setDailyRate(row.getString("daily_rate"));
 		// set daily rate may need to be changed to BigDecimal?
 		space.setId(row.getInt("id"));
 		space.setMaxOccupancy(row.getInt("max_occupancy"));
@@ -101,9 +99,84 @@ public class JDBCSpaceDAO implements SpaceDAO{
 		return space;
 	}
 
+	public String mapRowToSpaceName(SqlRowSet result) {
+		Space space = new Space();
+		space.setName(result.getString("name"));
+		String name = space.getName();
+		return name;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	public Space mapRowToAvailSpace(SqlRowSet row) {
+		Space space = new Space();
+
+		space.setDailyRate(row.getString("daily_rate"));
+		// set daily rate may need to be changed to BigDecimal?
+		space.setId(row.getInt("id"));
+		space.setMaxOccupancy(row.getInt("max_occupancy"));
+		space.setName(row.getString("name"));
+		space.setOpenFrom(row.getInt("open_from"));
+		space.setOpenTo(row.getInt("open_to"));
+		space.setVenueID(row.getInt("venue_id"));
+		
+		return space;
+	}
+	
+	
+	
+	public double getDailyRateint(String dailyRate) {
+
+
+	    String newStr = dailyRate.replaceAll(",", "");
+	  
+	        if (newStr.contains("$")) {
+	            System.out.println("true");
+	        }
+
+	        String newStr2 = newStr.replace("$", "");
+
+	    double dailyRateInt = Double.parseDouble(newStr2);
+
+	    return dailyRateInt;
+	}
+
+	@Override
+	public List<Space> getAllSpacesforVenueID(int userInputVenueId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Space> getSpacesByClient(LocalDate startDate, LocalDate endDate) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	@Override
 	public String getEndDate(String startDate, int numOfDays) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<Space> getSpacesByClient(long u) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+
 }

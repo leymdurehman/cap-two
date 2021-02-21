@@ -31,17 +31,21 @@ public interface ReservationDAO {
 
 
 
-	public Reservation createReservation(int spaceID, int maxOccupancy, String startDate, String EndDate, String reservedFor);
+	public void createReservation(int spaceID, int maxOccupancy, String startDate, String EndDate, String reservedFor);
 
 
 	Reservation getReservationsById(long resId);
 
+	public int getEndMonthNum(String endDate);
+	
+	public int getStartMonthNum(String startDate);
+	public String getEndDate(String startDate, int numOfDays);
+	
+	public List<Space> getAvailableSpacesByByDateRange(String startDate, String endDate, int numOfAttendees, int startMonth, int endMonth, long venueID);
 
-	List<Space> getAvailableSpacesByByDateRange(Date startDate, Date endDate);
 
-
-	List<Space> getAvailableSpacesByByDateRange(Date startDate, Date endDate, int numOfAttendees);
-
+	void createReservation(Reservation reservation, int spaceID, int numOfAttendees, String startDate, String endDate,
+			String reservedFor);
 
 
 	

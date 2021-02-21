@@ -10,7 +10,7 @@ private String name;
 private boolean isAccessible;
 private int openFrom;
 private int openTo;
-private BigDecimal dailyRate = BigDecimal.ZERO;
+private String dailyRate;
 private int maxOccupancy;
 public long getId() {
 	return id;
@@ -48,21 +48,14 @@ public int getOpenTo() {
 public void setOpenTo(int openTo) {
 	this.openTo = openTo;
 }
-public double getDailyRate() {
-	
-//	  BigDecimal amount = dailyRate;
-//    amount = amount.replace("$", "");
-//    amount = amount.replace(",", "");
-//    double intAmount= (int)Double.parseDouble(amount);
-    
-    long longAmount = dailyRate.longValue();
-    
-	return longAmount;
+public String getDailyRate() {
+   
+	return dailyRate;
 }
 
 
 
-public void setDailyRate(BigDecimal dailyRate) {
+public void setDailyRate(String dailyRate) {
 	this.dailyRate = dailyRate;
 }
 public int getMaxOccupancy() {

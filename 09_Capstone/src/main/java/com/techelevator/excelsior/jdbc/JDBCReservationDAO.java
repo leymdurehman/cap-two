@@ -47,8 +47,8 @@ private JdbcTemplate jdbcTemplate;
 
 
 
-
-	public List<Space> getAvailableSpacesByByDateRange(String startDate, String endDate, int numOfAttendees, int startMonth, int endMonth, int venueID) {
+	@Override
+	public List<Space> getAvailableSpacesByByDateRange(String startDate, String endDate, int numOfAttendees, int startMonth, int endMonth, long venueID) {
 		// for get month - since date format is standardized, just return the substring
 		List<Space> availableSpaces = new ArrayList<Space>();
 		startMonth = getStartMonthNum(startDate);
@@ -56,17 +56,16 @@ private JdbcTemplate jdbcTemplate;
 		
 		
 		
-		String sql = "SELECT space.id, space.venue_id, space.name, space.is_accessible, space.open_from, space.open_to, space.daily_rate, space.max_occupancy \n" + 
-				"FROM space\n" + 
-				"WHERE space.id NOT IN (SELECT space_id FROM reservation where (start_date BETWEEN CAST(? AS DATE) AND CAST(? AS DATE)) AND (end_date BETWEEN CAST(? AS DATE) AND CAST(? AS DATE)))\n" + 
-				"AND max_occupancy <= ? AND (open_from BETWEEN ? AND ?) AND (open_to BETWEEN ? AND ?) AND space.venue_id = ?";
-		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, startDate, endDate, startDate, endDate, numOfAttendees, startMonth,  endMonth, startMonth, endMonth, venueID );
+		String sql = "SELECT space.id, space.name, CAST(daily_rate AS varchar), space.max_occupancy FROM space WHERE space.id NOT IN (SELECT space_id FROM reservation where (start_date BETWEEN CAST( ? AS DATE) AND CAST( ? AS DATE)) AND (end_date BETWEEN CAST(? AS DATE) AND CAST( ? AS DATE))) AND max_occupancy >= ? AND ((open_from IS null) "
+				+ "OR ((? BETWEEN open_from AND open_to) AND ((? BETWEEN open_from AND open_to)))) AND venue_id = ?";
+				
+		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, startDate, endDate, startDate, endDate, numOfAttendees, startMonth,  endMonth, venueID );
 		
 	
 		
 		while(rows.next()) {
 			
-			availableSpaces.add(mapRowToSpace(rows));
+			availableSpaces.add(mapRowToAvailableSpace(rows));
 			
 		}
 		
@@ -74,15 +73,14 @@ private JdbcTemplate jdbcTemplate;
 		
 	
 	}
-
-	public Reservation createReservation(int spaceID, int numOfAttendees, String startDate, String endDate, String reservedFor) {
+	
+	@Override
+	public void createReservation(Reservation reservation, int spaceID, int numOfAttendees, String startDate, String endDate, String reservedFor) {
 		
-		String sql = "INSERT INTO reservation (reservation_id, space_id, number_of_attendees, start_date, end_date, reserved_for ) \n" + 
-				"VALUES (DEFAULT, ?, ?, ?, ?, ?) RETURNING reservation_id";
-		SqlRowSet resultsOfCreate = jdbcTemplate.queryForRowSet(sql, spaceID, numOfAttendees, startDate, endDate, reservedFor );
-		Reservation confirmedReservation = mapRowToReservation(resultsOfCreate);
-		return confirmedReservation;
-	}
+		String sql = "INSERT INTO reservation (reservation_id, space_id, number_of_attendees, start_date, end_date, reserved_for ) VALUES (DEFAULT, ?, ?, CAST(? AS DATE), CAST(? AS DATE), ?)";
+		jdbcTemplate.update(sql, spaceID, numOfAttendees, startDate, endDate, reservedFor );
+
+	}	
 
 	
 	
@@ -111,6 +109,7 @@ private JdbcTemplate jdbcTemplate;
 	// three methods below - can make unit tests
 	
 	//below- test 
+	@Override
 	public String getEndDate(String startDate, int numOfDays) {
 		
         LocalDate startDateAsDate = LocalDate.parse(startDate);
@@ -123,6 +122,7 @@ private JdbcTemplate jdbcTemplate;
 	
 	
 	// (below) - perhaps test when someone passes something too short for the substring length 7 (like 2021 instead of full date)
+	@Override
 	public int getStartMonthNum(String startDate){
     String startMonth = startDate.substring(5,7);
 
@@ -133,7 +133,7 @@ private JdbcTemplate jdbcTemplate;
     }
 	
 	
-	
+	@Override
 	public int getEndMonthNum(String endDate){
 
         String endMonth = endDate.substring(5,7);
@@ -144,6 +144,19 @@ private JdbcTemplate jdbcTemplate;
 
     }
 	
+	
+	
+	
+	public Space mapRowToAvailableSpace(SqlRowSet row) {
+		Space space = new Space();
+		space.setId(row.getInt("id"));
+		space.setName(row.getString("name"));
+		space.setMaxOccupancy(row.getInt("max_occupancy"));
+		space.setDailyRate(row.getString("daily_rate"));
+	
+		return space;
+				
+	}
 
 	
 	public Reservation mapRowToReservation(SqlRowSet row) {
@@ -165,7 +178,7 @@ private JdbcTemplate jdbcTemplate;
 	public Space mapRowToSpace(SqlRowSet row) {
 		Space space = new Space();
 		//space.setAccessible(row.getBoolean("is_accessible"));
-		space.setDailyRate(row.getBigDecimal("daily_rate"));
+		space.setDailyRate(row.getString("daily_rate"));
 		space.setId(row.getInt("id"));
 		space.setMaxOccupancy(row.getInt("max_occupancy"));
 		space.setName(row.getString("name"));
@@ -207,17 +220,12 @@ private JdbcTemplate jdbcTemplate;
 	}
 
 	@Override
-	public List<Space> getAvailableSpacesByByDateRange(Date startDate, Date endDate) {
+	public void createReservation(int spaceID, int maxOccupancy, String startDate, String EndDate, String reservedFor) {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
-	@Override
-	public List<Space> getAvailableSpacesByByDateRange(Date startDate, Date endDate, int numOfAttendees) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
+
 	
 	
 }
