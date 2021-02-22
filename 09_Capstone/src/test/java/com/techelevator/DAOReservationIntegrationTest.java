@@ -103,7 +103,7 @@ public class DAOReservationIntegrationTest extends DAOIntegrationTest{
 		Space testSpace = getTestSpace();
 		
 		testSpaces.add(testSpace);
-		
+		testSpaces.add(testSpace);
 		//List<Space> spaceFromDatabase = new ArrayList<Space>();
 		
 		
@@ -115,11 +115,69 @@ public class DAOReservationIntegrationTest extends DAOIntegrationTest{
 		Assert.assertNotNull(newSpace);
 		Assert.assertEquals(testSpaces.size(), newSpace.size());
 		
-		
-		
-		
 	}
-	
+	@Test
+    public void test_the_end_date() {
+        
+        String newStartDate = "2000-01-01";
+        int numOfDays = 10;
+        String expectedStartDate = "2000-01-11";
+        
+        String actualDate = reservationDAO.getEndDate(newStartDate, numOfDays);
+        
+        Assert.assertEquals(actualDate, expectedStartDate);
+    }
+    
+    
+    @Test
+    public void test_pull_month_from_date() {
+        
+        String newStartDate = "2000-01-01";
+        int expectedMonth = 01;
+        
+        int actualMonth = reservationDAO.getStartMonthNum(newStartDate) ;
+        //String actualMonth = jdbcReservationDao.getStartMonthNum(newStartDate);
+        
+        Assert.assertEquals(actualMonth, expectedMonth);
+    }
+     
+    
+    @Test
+    public void test_pull_month_from_endDate() {
+        
+        String newEndDate = "2000-01-01";
+        int expectedMonth = 01;
+        
+        int actualMonth = reservationDAO.getStartMonthNum(newEndDate) ;
+        //String actualMonth = jdbcReservationDao.getStartMonthNum(newStartDate);
+        
+        Assert.assertEquals(actualMonth, expectedMonth);
+    }
+    
+    
+    //NullPointer? Throws an Exception as below
+    
+    /*public abstract class ReflectiveCallable {
+        public Object run() throws Throwable {
+            try {
+                return runReflectiveCall();
+            } catch (InvocationTargetException e) {
+                throw e.getTargetException();
+            }*/
+    
+    @Test
+    public void test_wrong_format_pull_month_from_endDate() {
+        
+        String newEndDate = "01";
+        //int expectedMonth = 01;
+        
+        int actualMonth = reservationDAO.getStartMonthNum("01-01-2021") ;
+        //String actualMonth = jdbcReservationDao.getStartMonthNum(newStartDate);
+        
+        //Assert.assertNull(actualMonth);
+        Assert.assertNotEquals(newEndDate, actualMonth);
+    }
+
 	
 	
 	
