@@ -1,5 +1,6 @@
 package com.techelevator;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class ExcelsiorCLI {
 	//private stat
 	
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParseException {
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setUrl("jdbc:postgresql://localhost:5432/excelsior-venues");
 		dataSource.setUsername("postgres");
@@ -56,99 +57,89 @@ public class ExcelsiorCLI {
 		
 	}
 
-public void run() {
+	public void run() throws ParseException {
+			
+	
 		
-
-	
-	
-  while (true) {	
-	String input = menu.showHomeMenu();
-	Map<Integer, Venue> venueMap = new HashMap<Integer, Venue>();
-	if (input.contentEquals(MAIN_MENU_QUIT)) {
-	return; // exits program
-	}	
-	else if (input.contentEquals(LIST_VENUES)) {
-		venueMap = menu.showVenueNamesMenu(venueDAO.getAllVenues()); //display all venues	
-		String customerVenueChoice = menu.venueChoice(); 
-			if (customerVenueChoice.contentEquals(RETURN_TO_PREVIOUS_MENU)) {
-				menu.showHomeMenu();
-		} else if(customerVenueChoice != "R") { 	
-		int venueIDInput = Integer.parseInt(customerVenueChoice);
-		menu.displayVenueDetails(venueMap.get(venueIDInput));
-		long venueIDCustomer = venueMap.get(venueIDInput).getId();
-		menu.printVenueCategories(venueDAO.getCategoryFromVenueID(venueIDCustomer));
-		menu.showVenueDetails(venueMap.get(venueIDInput));
-		String venueDetailschoice = menu.venueDetailsMenu();
-		if (venueDetailschoice.contentEquals(VIEW_SPACES)) {
-	List<Space> allSpacesFromVenue = spaceDAO.getAllSpacesforVenueID(venueIDCustomer);
-		Venue venueInfo = venueMap.get(venueIDInput);
-				menu.venueSpacesMenu(venueInfo,allSpacesFromVenue);
-		} String spaceChoice = menu.spaceDetailsMenu();
-			if(spaceChoice.contentEquals(RETURN_TO_PREVIOUS_MENU)) {
-				menu.venueDetailsMenu();
-				
-			}
-		if (spaceChoice.contentEquals(RESERVE_A_SPACE)) {
-			
-			String startDate = menu.spaceStartDate();
-			int numOfDays = menu.lengthOfStay();
-			int numOfPeople = menu.attendanceNumber();
-			String endDate = reservationDAO.getEndDate(startDate, numOfDays);
-			int startMonth = reservationDAO.getStartMonthNum(startDate);
-			int endMonth = reservationDAO.getEndMonthNum(endDate);
-			List<Space> availableSpaces= reservationDAO.getAvailableSpacesByByDateRange(startDate, endDate, 
-														numOfPeople, startMonth, endMonth, venueIDCustomer);
-			if (availableSpaces == null) {
-					menu.noAvabilibity();
-					menu.venueDetailsMenu();
-			} else
-					menu.spaceReservationMenu(availableSpaces, numOfDays);
-			int spaceID = menu.userSpaceSelection();
-			
-			if (spaceID == 0) {
+		
+	  while (true) {	
+		String input = menu.showHomeMenu();
+		//input.toUpperCase();
+		Map<Integer, Venue> venueMap = new HashMap<Integer, Venue>();
+		if (input.contentEquals(MAIN_MENU_QUIT)) {
+		return; // exits program
+		}	
+		else if (input.contentEquals(LIST_VENUES)) {
+			venueMap = menu.showVenueNamesMenu(venueDAO.getAllVenues()); //display all venues	
+			String customerVenueChoice = menu.venueChoice(); 
+				if (customerVenueChoice.contentEquals(RETURN_TO_PREVIOUS_MENU)) {
 					menu.showHomeMenu();
 					
-			} else {
+			} else if(customerVenueChoice != "R") { 	
+			int venueIDInput = Integer.parseInt(customerVenueChoice);
+			menu.displayVenueDetails(venueMap.get(venueIDInput));
+			long venueIDCustomer = venueMap.get(venueIDInput).getId();
+			menu.printVenueCategories(venueDAO.getCategoryFromVenueID(venueIDCustomer));
+			menu.showVenueDetails(venueMap.get(venueIDInput));
+			String venueDetailschoice = menu.venueDetailsMenu();
+			if (venueDetailschoice.contentEquals(VIEW_SPACES)) {
+		List<Space> allSpacesFromVenue = spaceDAO.getAllSpacesforVenueID(venueIDCustomer);
+			Venue venueInfo = venueMap.get(venueIDInput);
+					menu.venueSpacesMenu(venueInfo,allSpacesFromVenue);
+			} String spaceChoice = menu.spaceDetailsMenu();
+				if(spaceChoice.contentEquals(RETURN_TO_PREVIOUS_MENU)) {
+					menu.venueDetailsMenu();
 					
-			String reservedName = menu.userName();
-				if (reservedName != null) {
-					
-			reservationDAO.createReservation(spaceID, numOfPeople, startDate, endDate, reservedName);
+				}
+			if (spaceChoice.contentEquals(RESERVE_A_SPACE)) {
+				
+				String startDate = menu.spaceStartDate();
+				int numOfDays = menu.lengthOfStay();
+				int numOfPeople = menu.attendanceNumber();
+				String endDate = reservationDAO.getEndDate(startDate, numOfDays);
+				int startMonth = reservationDAO.getStartMonthNum(startDate);
+				int endMonth = reservationDAO.getEndMonthNum(endDate);
+				List<Space> availableSpaces= reservationDAO.getAvailableSpacesByByDateRange(startDate, endDate, 
+															numOfPeople, startMonth, endMonth, venueIDCustomer);
+				if (availableSpaces == null) {
+						menu.noAvabilibity();
+						menu.venueDetailsMenu();
+				} else
+						menu.spaceReservationMenu(availableSpaces, numOfDays);
+				int spaceID = menu.userSpaceSelection();
+				
+					if (spaceID == 0) {
+							menu.showHomeMenu();
+							//break;
 							
-			
-			String spaceName = spaceDAO.getSpaceNameByClient(spaceID);
-			String venueName = venueMap.get(venueIDInput).getName();
-			
-			menu.userReservation(numOfPeople, reservedName, startDate, endDate, spaceName, venueName);
-		} menu.showHomeMenu();			
+					} else {
+							
+					String reservationName = menu.userName();
 					
-		}	
-		}
-	
-		
-		
-		}
+						if (reservationName != null) {
+		//					menu.userName();
+		//				} else {
+							
+							
+					reservationDAO.createReservation(spaceID, numOfPeople, startDate, endDate, reservationName);		
+					
+						String spaceName = spaceDAO.getSpaceNameByClient(spaceID);
+						String venueName = venueMap.get(venueIDInput).getName();
+						
+						menu.userReservation(numOfPeople, reservationName, startDate, endDate, spaceName, venueName);
+						
+								}
+					
+						} 		
+							
+					}		
+			
+				}
+				
+			}							
+							
+	  	}						 
+						
 	}
-						
-  			
-						
-						
-					
-						
-  }						 
-					
-}
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

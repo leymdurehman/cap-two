@@ -2,10 +2,17 @@ package com.techelevator;
 
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import java.util.Scanner;
@@ -14,6 +21,7 @@ import com.techelevator.excelsior.model.Reservation;
 import com.techelevator.excelsior.model.Space;
 
 import com.techelevator.excelsior.model.Venue;
+import com.techelevator.excelsior.model.VenueDAO;
 
 public class Menu {
 	
@@ -88,8 +96,10 @@ public class Menu {
 	}
 	
 	public void displayVenueDetails(Venue venueMap) {
-		System.out.printf(venueMap.getName());
+		System.out.printf(venueMap.getName() + " ");
+		
 		System.out.printf(venueMap.getCity() + ", " + venueMap.getState());
+		// venueMap is not populating City and State
 	}
 		
 		
@@ -164,29 +174,85 @@ public class Menu {
 	
 
 		
-		public String spaceStartDate() {
-			System.out.println("When do you need the space? (YYYY-MM-DD) ");
-			String userDateChoice = in.nextLine();
+		public String spaceStartDate() throws ParseException {
+			Date currentDate = Calendar.getInstance().getTime();
+			DateFormat format = new SimpleDateFormat("yyyy-mm-dd", Locale.ENGLISH);
 			
-		
+			String userDateChoice = null;
+			boolean time;
+			
+			do {
+				System.out.println("When do you need the space? (YYYY-MM-DD) ");
+				userDateChoice = in.nextLine();
+				Date userDateEntered = format.parse(userDateChoice);
+				
+				if (userDateEntered.before(currentDate)) {
+					System.out.println("Please enter a valid date.");
+					//userDateChoice = in.nextLine();
+					time = false;
+				}
+				else {
+					time = true;
+				}
+			}
+			while(!time);
+			
 			return userDateChoice;
+			
+//			
+//				System.out.println("When do you need the space? (YYYY-MM-DD) ");
+//				String userDateChoice = in.nextLine();
+//		
+//			return userDateChoice;
 		}
 		
 		public int lengthOfStay() {
-			System.out.println("How many days will you need the space? ");
-			String userSpanChoice = in.nextLine();
-			int userSpanChoiceAsInt = Integer.parseInt(userSpanChoice);
+			boolean length;
+			int userSpanChoiceAsInt = 0;
 			
+			do {
+				
+				System.out.println("How many days will you need the space? ");
+				String userSpanChoice = in.nextLine();
+				userSpanChoiceAsInt = Integer.parseInt(userSpanChoice);
+				
+					if (userSpanChoiceAsInt < 1) {
+						notAValidChoice();
+						length = false;
+					}
+					else {
+						length = true;
+					}
+				}
+				while(!length);
 			return userSpanChoiceAsInt;
 		}
 		
 		public int attendanceNumber() {
+			boolean attendance;
+			int attendanceNumberAsInt = 0;
+			
+			do {
 			System.out.println("How many people will be in attendance? ");
 			String userAttendanceChoice = in.nextLine();
-			int attendanceNumberAsInt = Integer.parseInt(userAttendanceChoice);
+			attendanceNumberAsInt = Integer.parseInt(userAttendanceChoice);
+			
+				if (attendanceNumberAsInt < 1) {
+					notAValidChoice();
+					attendance = false;
+				}
+				else {
+					attendance = true;
+				}	
+			}
+			while (!attendance);
 			return attendanceNumberAsInt;
 		}
 		
+		public void notAValidChoice() {
+			System.out.println("Sorry, that's not a valid choice.");
+			
+		}
 		
 		public void noAvabilibity() {
 			
@@ -197,18 +263,16 @@ public class Menu {
 		
 		
 		
-		
-		
-		
 		public void spaceReservationMenu( List<Space> availableSpaces, int numOfdays){
 		System.out.println("The following spaces are available based on your needs: ");
 		System.out.println();
 		
-		System.out.println("Space #" + "Name" + "Daily Rate" 
-		+ "Max Occup."
-		+ "Total Cost");
+		System.out.printf("%1s %10s %15s %15s %15s \n", "Space #", "Name", "Daily Rate" 
+		, "Max Occup.", "Total Cost");
+		
+			//double totalCost = calculateTotalCost(availableSpaces, numOfdays);
 	
-		for (Space space : availableSpaces) {
+			for (Space space : availableSpaces) {
 			
 			//this.totalCost = lengthOfStay() * space.getDailyRate();
 			String dailyRate = space.getDailyRate();
@@ -217,15 +281,26 @@ public class Menu {
 			double dailyRateInt = Double.parseDouble(str2);
 			double totalCost = dailyRateInt * numOfdays;
 			
-			System.out.println("#" + space.getId() + "    " + space.getName() + "    "
-					+ space.getDailyRate() + "    " + space.getMaxOccupancy() + "    "
-					 + totalCost);
+			System.out.println("#" + space.getId() + space.getName() 
+					+ space.getDailyRate() + space.getMaxOccupancy() + totalCost);
 			}
 		
 		}
 		
+//		public double calculateTotalCost(List<Space>availableSpaces, int numOfdays) {
+//			double totalCost = 0;
+//			for (Space space : availableSpaces) {
+//				String dailyRate = space.getDailyRate();
+//				String str = dailyRate.replaceAll(",", "");
+//				String str2 = str.replace("$", "");
+//				double dailyRateInt = Double.parseDouble(str2);
+//				totalCost = dailyRateInt * numOfdays;
+//			}
+//			return totalCost;
+//		}
+		
 		public int userSpaceSelection() {
-			System.out.println("Which space would you like to reserve (enter 0 to cancel)?");
+			System.out.println("Which space would you like to reserve (enter 0 to cancel)? ");
 			int userSpace = in.nextInt();
 			return userSpace;
 		}
@@ -235,46 +310,34 @@ public class Menu {
 			return reservationName;
 		}
 		
-		public void userReservation (int numOfAttendees, String reservedFor, String startDate, String endDate, String spaceName, String venue) { 
-		System.out.println("Thanks for submitting your reservation! The details for your event are listed below:/n");
+		public void userReservation (int numOfAttendees, String reservationName, String startDate, String endDate, String spaceName, String venue) {
+			
+			
+			System.out.println("Thanks for submitting your reservation! The details for your event are listed below:");
+			System.out.println();
+			
+			Map<Integer, String> confirmedReservation = new LinkedHashMap<Integer, String>();
+			
+			int confirmationNumber = 0;
+			
+			System.out.println("Confirmation #: " + confirmationNumber);
+			
+			confirmedReservation.put(confirmationNumber, reservationName);
+			
+			System.out.println("Venue: " + venue);
+			
+			System.out.println("Space: " + spaceName);
+			
+			System.out.println("Reserved For: " + reservationName);
+			
+			System.out.println("Attendees: " + numOfAttendees);
+			
+			System.out.println("Arrival Date: " + startDate);
+			
+			System.out.println("Departure Date: " + endDate);
+			
+			//System.out.println("Total Cost: " + totalCost);
 		
-		Map<Integer, String> confirmedReservation = new LinkedHashMap<Integer, String>();
-		
-		int confirmationNumber = 0;
-		
-		System.out.println("Confirmation #: " + confirmationNumber);
-		
-		confirmedReservation.put(confirmationNumber, reservedFor);
-		
-		System.out.println("Venue: " + venue);
-		
-		System.out.println("Space: " + spaceName);
-		
-		System.out.println("Reserved For: " + reservedFor);
-		
-		System.out.println("Attendees: " + numOfAttendees);
-		
-		System.out.println("Arrival Date: " + startDate);
-		
-		System.out.println("Departure Date: " + endDate);
-		
-		//System.out.println("Total Cost: " + totalCost);
-	
-	}
+		}
 	
 }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
