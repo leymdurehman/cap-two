@@ -74,33 +74,8 @@ public class ExcelsiorUnitTest extends DAOIntegrationTest{
         reservationDAO = new JDBCReservationDAO(dataSource);
     }
     
-    @Test
-    public void get_All_Reservations() {
-        
-        List<Reservation> results = reservationDAO.getAllReservations();
-        
-        Assert.assertNotNull(results);
-        Assert.assertTrue(results.size() >= 1);
-    }
-    
-    @Test
-    public void get_Available_Spaces_By_DateRange() {
-    
-        
-        List<Space> testSpaces = new ArrayList<Space>();
-        Space testSpace = getTestSpace();
-        testSpaces.add(testSpace);
-        
-        //List<Space> spaceFromDatabase = new ArrayList<Space>();
-        
-        List<Space> newSpace = new ArrayList<Space>(); 
-        
-        newSpace = reservationDAO.getAvailableSpacesByByDateRange("2021-01-01", "2021-12-30", 130, 1, 12, 11);
-        
-        Assert.assertNotNull(newSpace);
-        Assert.assertEquals(testSpaces.size(), newSpace.size());
-        
-    }
+  
+  
     
     
     JDBCReservationDAO jdbcReservationDao;
