@@ -249,7 +249,8 @@ public class Menu {
 		
 		Map<Integer, String> confirmedReservation = new LinkedHashMap<Integer, String>();
 		
-		int confirmationNumber = 0;
+		int confirmationNumber = numOfAttendees;
+		
 		
 		System.out.println("Confirmation #: " + confirmationNumber);
 		
